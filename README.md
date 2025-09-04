@@ -4,16 +4,12 @@ A lightweight, browser-based challenge tracker with local save support and seed 
 
 ## Features
 
-- Local saves: Your progress and handicap database are stored privately in your browser.
 - Seed system: Export or import your challenge state to back it up or share with others.
-- No server required: Runs entirely in your browser.
-- Streamer-friendly: Share a seed with your audience so they can follow along.
+- Streamer-friendly: Share a seed with your audience & they can replicate your run.
 - Portable: Works anywhere you can open a modern web browser.
 
-## How It Works
+## Seed System
 
-1. Track your progress by adding or updating your challenge state as you play.
-2. Data is stored in your browser’s storage automatically.
 3. Export a seed to create a shareable code containing your current challenge setup.
 4. Import a seed to load someone else’s challenge or restore your own from a backup.
 
@@ -22,8 +18,8 @@ Even if you clear your browser cache or switch devices, you can restore your pro
 ## Rules
 
 ### Concept
-The Reroll Challenge is designed to help you work through your game library by rotating through multiple games with escalating constraints.  
-It is built for endurance rather than speed — play cleanly, manage risk, and keep momentum.
+The Reroll Challenge is designed to help you work through your game library by rotating through multiple games with escalating constraints.   
+It is built for endurance rather than speed. play cleanly, manage risk, and keep momentum.
 
 ---
 
@@ -58,7 +54,7 @@ It is built for endurance rather than speed — play cleanly, manage risk, and k
 ---
 
 ### Rotation End
-- Completing the final slot clears all temporary handicaps.
+- Finishing a rotation(die in final game, or reach the the hour timer) clears all temporary handicaps.
 - There is a **1% chance** at rotation end to also clear all permanent handicaps.
 - Rotation count increments; token usage resets.
 
@@ -66,8 +62,8 @@ It is built for endurance rather than speed — play cleanly, manage risk, and k
 
 ### Database and Slots
 - Maintain a database of games with separate pools for permanent and temporary handicaps.
-- Each slot selects a game from the database via a dropdown.
-- All handicap rolls reference the selected game’s database pools.
+- Each slot lets you select a game from the database via a dropdown.
+- Handicaps are automatically pulled for whatever game's actively slotted.
 
 ---
 
