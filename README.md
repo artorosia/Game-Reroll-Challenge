@@ -85,4 +85,4 @@ Handicaps are automatically pulled for whatever game is actively slotted.
 Manual handicap assignment is not currently available, but may be added in the future for curated challenges.
 Goal
 
-Clear all games in the fewest rotations possible. Fewer deaths, smarter plays, faster clears. Clearing a game entirely not only removes it from your backlog but also clears 3–4 random permanent handicaps, making it a powerful way to improve your odds in the rest of the challenge. Or adapt the system for variety streaming, speedrun gauntlets, or community challenge events
+Clear all games in the fewest rotations possible. Fewer deaths, smarter plays, faster clears. Clearing a game entirely not only removes it from your backlog but also clears 3–4 random permanent handicaps, making it a powerful way to improve your odds in the rest of the challenge. Or adapt the system for variety streaming, speedrun gauntlets, or community challenge events.
