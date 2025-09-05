@@ -2,6 +2,22 @@
 
 A lightweight, browser-based challenge tracker with local save support and seed import/export for easy sharing. Designed for streamers, speedrunners, and solo players.
 
+## Table of Contents
+- [Getting Started](#getting-started)
+  - [Online Version](#online-version)
+  - [Local Version](#local-version)
+- [Features](#features)
+- [Seed System](#seed-system)
+- [Rules](#rules)
+  - [Concept](#concept)
+  - [Rotation and Sessions](#rotation-and-sessions)
+  - [Deaths and Temporary Handicaps](#deaths-and-temporary-handicaps)
+  - [Permanent Handicaps](#permanent-handicaps)
+  - [Tokens and Achievements](#tokens-and-achievements)
+  - [Rotation End](#rotation-end)
+  - [Database and Slots](#database-and-slots)
+  - [Goal](#goal)
+
 ## Getting Started
 
 ### Online Version
