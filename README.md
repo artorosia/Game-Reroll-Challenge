@@ -17,7 +17,6 @@ Visit the live site here:
 
 - Seed system: Export or import your challenge state to back it up or share with others.
 - Streamer-friendly: Share a seed with your audience & they can replicate your run.(also potential stream overlay, if I get it working, [seen here](https://i.imgur.com/Enjv4rL.png)
-)
 - Portable: Works anywhere you can open a modern web browser.
 
 ## Seed System
