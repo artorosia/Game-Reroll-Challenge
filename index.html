@@ -52,6 +52,7 @@
       border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px; background: white; transition: transform 0.2s, box-shadow 0.2s; position: relative;
     }
     .game-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+    .game-card.active-dropdown { z-index: 102; } /* Ensure active card is above siblings */
     .game-card.completed { background-color: #e6ffe6; border-color: var(--success); }
     .game-card.completed .game-title { color: var(--success); }
     .game-card.dragging { opacity: 0.5; border: 2px dashed var(--secondary); }
@@ -60,6 +61,13 @@
     .game-title { font-weight: bold; font-size: 1.1em; color: var(--primary); display: flex; align-items: center; gap: 10px; }
     .game-title select { padding: 6px 8px; border-radius: 6px; border: 1px solid #ddd; }
     .game-progress { font-size: 0.95em; color: #666; display: flex; gap: 15px; }
+    /* Styles for searchable dropdown */
+    .searchable-dropdown { position: relative; width: 250px; }
+    .searchable-dropdown input { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.95em; }
+    .searchable-dropdown-results { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 6px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .searchable-dropdown-item { padding: 6px 8px; cursor: pointer; font-size: 0.9em; }
+    .searchable-dropdown-item:hover { background-color: #f0f0f0; }
+    .searchable-dropdown.active { z-index: 101; } /* Ensure active dropdown is above other cards */
 
     .game-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
     .handicap-section strong { display: block; margin-bottom: 6px; }
@@ -260,6 +268,13 @@
               </button>
               <button class="action-button btn-primary" onclick="showImportModal()">
                 <i class="fas fa-file-import"></i> Import Seed
+              </button>
+            </div>
+            <div class="stat-item" style="margin-top: 20px;">
+              <span>Total Completed Runs:</span>
+              <span id="totalCompletedRunsDisplay">0</span>
+              <button class="handicap-btn" title="Clear Total Completed Runs" onclick="clearTotalCompletedRuns()">
+                <i class="fas fa-times"></i>
               </button>
             </div>
           </div>
@@ -517,7 +532,8 @@
       tokenUsedThisRotation: false,
       gameDatabase: [],
       permHandicaps: {},
-      tempHandicaps: {}
+      tempHandicaps: {},
+      totalCompletedRuns: 0 // New counter for total completed runs
     };
 
     // Sample seeds for first run
@@ -579,6 +595,8 @@
       if (saved) {
         try {
           challengeData = JSON.parse(saved);
+          // Ensure totalCompletedRuns is a number
+          challengeData.totalCompletedRuns = Number(challengeData.totalCompletedRuns) || 0;
           // Clean up timer intervals if any persisted incorrectly
           challengeData.slots.forEach(s => { s.timerInterval = null; s.timerActive = false; });
         } catch {
@@ -604,7 +622,8 @@
         tokenUsedThisRotation: false,
         gameDatabase: [...sampleGames],
         permHandicaps: JSON.parse(JSON.stringify(samplePermHandicaps)),
-        tempHandicaps: JSON.parse(JSON.stringify(sampleTempHandicaps))
+        tempHandicaps: JSON.parse(JSON.stringify(sampleTempHandicaps)),
+        totalCompletedRuns: 0 // Initialize for sample data
       };
     }
 
@@ -668,12 +687,10 @@
           <div class="game-header">
             <div class="game-title">
               <span>Slot ${slot.id}</span>
-              <select onchange="updateGame(${slot.id}, this.value)">
-                <option value="">-- Select a game --</option>
-                ${challengeData.gameDatabase.map(g =>
-                  `<option value="${escapeHtml(g)}"${slot.game === g ? ' selected' : ''}>${escapeHtml(g)}</option>`
-                ).join('')}
-              </select>
+              <div class="searchable-dropdown" id="game-select-${slot.id}">
+                <input type="text" placeholder="Select a game..." value="${escapeAttr(slot.game)}" onfocus="this.select(); renderSearchableDropdown(this, ${slot.id});" oninput="renderSearchableDropdown(this, ${slot.id});" onblur="hideSearchableDropdown(this);" data-slot-id="${slot.id}"/>
+                <div class="searchable-dropdown-results"></div>
+              </div>
             </div>
             <div class="game-progress">
               <span>${slot.progress} | Deaths: ${slot.deaths}</span>
@@ -849,6 +866,7 @@
       document.getElementById('totalDeaths').textContent = totalDeaths;
       document.getElementById('rotationsCompleted').textContent = challengeData.rotationsCompleted;
       document.getElementById('tokenCount').textContent = challengeData.tokens;
+      document.getElementById('totalCompletedRunsDisplay').textContent = challengeData.totalCompletedRuns; // Update the new counter display
     }
 
     // Token button
@@ -978,6 +996,14 @@
       } else {
         message += `No permanent handicaps were available to remove.`;
       }
+
+      const allGamesCompleted = challengeData.slots.every(s => s.progress === 'Completed' || !s.game);
+      if (allGamesCompleted) {
+        message += '<br><br><strong>🎉 Congratulations! You\'ve completed all games in your rotation! 🎉</strong>';
+        challengeData.totalCompletedRuns++; // Increment the new counter
+        updateStats(); // Update stats display
+      }
+
       showResult('Game Completed', message);
     }
 
@@ -1577,6 +1603,17 @@
       showResult('Progress Reset', 'All progress has been reset. Slots, selected games, and the database remain intact.');
     }
 
+    // Function to clear total completed runs
+    function clearTotalCompletedRuns() {
+      const confirmClear = window.confirm('Are you sure you want to clear the Total Completed Runs counter? This cannot be undone.');
+      if (confirmClear) {
+        challengeData.totalCompletedRuns = 0;
+        updateStats();
+        saveData();
+        showResult('Counter Cleared', 'Total Completed Runs counter has been reset to 0.');
+      }
+    }
+
     // Game Edit/Delete
     function showEditGameModal(gameName) {
       document.getElementById('originalGameName').value = gameName;
@@ -1741,9 +1778,72 @@
       return String(str).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
     }
 
+    // Searchable Dropdown Logic
+    function renderSearchableDropdown(inputElement, slotId) {
+      const searchTerm = inputElement.value.toLowerCase();
+      const resultsContainer = inputElement.nextElementSibling; // The div with class 'searchable-dropdown-results'
+      const dropdownContainer = inputElement.closest('.searchable-dropdown');
+      const gameCard = inputElement.closest('.game-card'); // Get the parent game-card
+
+      resultsContainer.innerHTML = '';
+
+      if (searchTerm === '') {
+        // Show all games if search term is empty
+        challengeData.gameDatabase.sort((a, b) => a.localeCompare(b)).forEach(game => {
+          const item = document.createElement('div');
+          item.className = 'searchable-dropdown-item';
+          item.textContent = game;
+          item.onmousedown = (e) => { // Use mousedown to prevent blur from firing before click
+            e.preventDefault();
+            inputElement.value = game;
+            updateGame(slotId, game);
+            resultsContainer.style.display = 'none';
+            dropdownContainer.classList.remove('active');
+            if (gameCard) gameCard.classList.remove('active-dropdown'); // Remove active class
+          };
+          resultsContainer.appendChild(item);
+        });
+      } else {
+        // Filter games based on search term
+        const regex = new RegExp(`\\b${searchTerm}`, 'i');
+        challengeData.gameDatabase.filter(game => regex.test(game)).sort((a,b) => a.localeCompare(b)).forEach(game => {
+          const item = document.createElement('div');
+          item.className = 'searchable-dropdown-item';
+          item.textContent = game;
+          item.onmousedown = (e) => {
+            e.preventDefault();
+            inputElement.value = game;
+            updateGame(slotId, game);
+            resultsContainer.style.display = 'none';
+            dropdownContainer.classList.remove('active');
+            if (gameCard) gameCard.classList.remove('active-dropdown'); // Remove active class
+          };
+          resultsContainer.appendChild(item);
+        });
+      }
+
+      resultsContainer.style.display = 'block';
+      dropdownContainer.classList.add('active');
+      if (gameCard) gameCard.classList.add('active-dropdown'); // Add active class to game card
+    }
+
+    function hideSearchableDropdown(inputElement) {
+      const resultsContainer = inputElement.nextElementSibling;
+      const dropdownContainer = inputElement.closest('.searchable-dropdown');
+      const gameCard = inputElement.closest('.game-card'); // Get the parent game-card
+
+      // Delay hiding to allow click on results item
+      setTimeout(() => {
+        if (!resultsContainer.contains(document.activeElement)) {
+          resultsContainer.style.display = 'none';
+          dropdownContainer.classList.remove('active');
+          if (gameCard) gameCard.classList.remove('active-dropdown'); // Remove active class
+        }
+      }, 150);
+    }
+
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
-
 
