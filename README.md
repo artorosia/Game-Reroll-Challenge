@@ -46,65 +46,50 @@ It has since grown into a modular framework that can be shaped to fit almost any
 Because the system does not hook into game code, it works with any game. You can apply the same framework to everything you play and customise the rules to fit your style. A long‑form endurance run might rotate between three RPGs, each with its own 90‑minute timer and strict resource limits. A short experimental session could cycle through several platformers in 10‑minute bursts with temporary handicaps like “must keep moving” or “no jumping for 30 seconds.” A structured speedrun race could give each game a different timer based on its category length, paired with handicaps that force new routes or strategies. A community challenge night might use a viewer‑submitted seed with a curated mix of games, timers, and rules that everyone can load and attempt.
 
 
----Rotation and Sessions
+SECTION                  | DEFAULT RULE
+------------------------ | --------------------------------------------------------------
+SLOTS                    | 1–10 slots, each representing one game in the rotation order.
+                         | More slots create more variety and allow temporary handicaps
+                         | to spread across multiple games. Slots can also be used for
+                         | different categories of the same game, alternate save files,
+                         | or different difficulty settings.
 
-    Set up 1–10 slots, each representing one game in your rotation order. The challenge works with any number, but more slots create more variety and allow temporary handicaps to spread across multiple games. Slots can also be used for different categories of the same game, alternate save files, or different difficulty settings.
+SESSION LENGTH           | 1 hour per slot.
+                         | Timer length is adjustable per slot (e.g., 15 min for short
+                         | runs, 90 min for long RPG segments, or no timer for play
+                         | until death).
 
-    Each session lasts 1 hour per slot, tracked with the slot’s timer widget. The timer length is fully adjustable per slot. You can give a speedrun segment 15 minutes, a grind heavy RPG 90 minutes, or run without a timer for a play until death format.
+ROTATION FLOW            | Progress through slots in order. When the final slot finishes,
+                         | the rotation repeats. All temporary handicaps are cleared at
+                         | the end of each rotation.
 
-    Progress through slots in order. When the final slot finishes, the rotation repeats. At the end of each rotation, all temporary handicaps are cleared.
+TEMPORARY HANDICAPS      | Triggered by a death, assigned to a future slot in the same
+                         | rotation. Only later slots can receive them. Last one session
+                         | and stack naturally if multiple deaths target the same slot.
 
-Deaths and Temporary Handicaps
+PERMANENT HANDICAPS      | Game‑specific constraints that persist across rotations.
+                         | Max 3 per game to avoid softlocks. No duplicates. At the end
+                         | of each rotation there is a fixed 1% chance to clear all
+                         | permanent handicaps (configurable in a future update).
+                         | Beating a game completely clears 3–4 random permanent
+                         | handicaps from the run.
 
-    When you die in a slot, immediately switch to the next slot. You can change this trigger to something else, such as swapping on boss defeat, level completion, or a set number of in game days.
+TOKENS                   | 20% chance from any achievement to grant a token (fixed for
+                         | now, configurable in a future update). Tokens clear one
+                         | permanent handicap. Max one token use per rotation.
 
-    That death also triggers a temporary handicap assigned to a future slot within the same rotation.
+ROTATION END             | Clears all temporary handicaps. 1% chance to clear all
+                         | permanent handicaps. Rotation counter increases by one and
+                         | token usage resets.
 
-        Only slots appearing after the current slot can receive the handicap.
+DATABASE                 | Separate pools for permanent and temporary handicaps.
+                         | Multiple databases can be kept for different genres,
+                         | difficulty levels, or events. Handicaps are automatically
+                         | pulled for the active slot. Manual assignment is not yet
+                         | available but may be added in the future.
 
-        Slot 1 is immune to temporary handicaps caused in prior rotations, since all temps clear at rotation end.
-
-    Temporary handicaps always last one session and naturally stack if multiple deaths target the same future slot. In a large rotation, the final slot can end up carrying several temporary handicaps at once.
-
-Permanent Handicaps
-
-    Permanent handicaps are game specific constraints that persist across rotations. You can make these as light or as punishing as you want, from “no fast travel” to “permadeath for party members.”
-
-    Each game can have a maximum of 3 permanent handicaps to avoid softlocks. You can raise or lower this cap depending on how challenging you want the run to be.
-
-    Rolling a permanent handicap selects from that game’s database pool, avoiding duplicates.
-
-    At the end of each rotation there is a 1% chance to clear all permanent handicaps. This chance is fixed in the current version, but the option to change it will be added in a future update.
-
-    Beating a game completely immediately clears 3–4 random permanent handicaps from your entire run, giving a strong incentive to finish titles rather than just rotate through them.
-
-Tokens and Achievements
-
-    Every achievement earned (in any game) has a 20% chance to grant a token. This chance is fixed in the current version, but the option to change it or tie tokens to other milestones will be added in a future update.
-
-    Tokens can clear one permanent handicap.
-
-    You may use at most one token per rotation.
-
-Rotation End
-
-    Finishing a rotation (dying in the final game, or reaching the hour timer) clears all temporary handicaps.
-
-    There is a 1% chance at rotation end to also clear all permanent handicaps (configurable in a future update).
-
-    The rotation counter increases by one, and token usage limits reset.
-
-Database and Slots
-
-    Maintain a database of games with separate pools for permanent and temporary handicaps. You can keep multiple databases for different genres, difficulty levels, or community events.
-
-    Each slot lets you select a game from the database via a dropdown.
-
-    Handicaps are automatically pulled for whatever game is actively slotted.
-
-    Manual handicap assignment is not currently available, but may be added in the future for curated challenges.
-
-Goal
-
-Clear all games in the fewest rotations possible. Fewer deaths, smarter plays, faster clears. Clearing a game entirely not only removes it from your backlog but also clears 3–4 random permanent handicaps, making it a powerful way to improve your odds in the rest of the challenge. Or adapt the system for variety streaming, speedrun gauntlets, or community challenge events.
+GOAL                     | Clear all games in the fewest rotations possible. Clearing a
+                         | game entirely also clears 3–4 random permanent handicaps.
+                         | Can also be adapted for variety streaming, speedrun gauntlets,
+                         | or community challenge events.
 
