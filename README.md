@@ -29,8 +29,22 @@ Even if you clear your browser cache or switch devices, you can restore your pro
 ## Rules
 
 ### Concept
-The Reroll Challenge is designed to help you work through your game library by rotating through multiple games with escalating constraints.   
-It is built for endurance rather than speed. play cleanly, manage risk, and keep momentum.
+The Reroll Challenge began as a way for me to have fun clearing my backlog, games I otherwise wasn’t going to play. It worked by rotating through multiple titles with escalating constraints, keeping things fresh and giving me a reason to stick with them.
+
+It has since grown into a modular framework that can be shaped to fit almost any style of play. You can:
+
+    Build your own pool of games for any platform or genre.
+
+    Create custom handicap lists, split into permanent and temporary rules.
+
+    Adjust rotation rules to swap games after a set time, a death, a level, or any trigger you choose.
+
+    Dynamically set different timers for each game, so a speedrun segment might get 15 minutes while a longer endurance section gets an hour.
+
+    Export and import seeds so others can run the exact same setup, whether for casual play, community races, or competitive speedruns.
+
+Because the system does not hook into game code, it works with any game. You can apply the same framework to everything you play and customise the rules to fit your style. A long‑form endurance run might rotate between three RPGs, each with its own 90‑minute timer and strict resource limits. A short experimental session could cycle through several platformers in 10‑minute bursts with temporary handicaps like “must keep moving” or “no jumping for 30 seconds.” A structured speedrun race could give each game a different timer based on its category length, paired with handicaps that force new routes or strategies. A community challenge night might use a viewer‑submitted seed with a curated mix of games, timers, and rules that everyone can load and attempt.
+
 
 ---
 
