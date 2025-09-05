@@ -32,13 +32,13 @@ Visit the live site here:
 ## Features
 
 - Seed system: Export or import your challenge state to back it up or share with others.
-- Streamer-friendly: Share a seed with your audience & they can replicate your run.(Also potential stream overlay, if I get it working, [seen here](https://i.imgur.com/Enjv4rL.png))
+- Streamer-friendly: Share a seed with your audience & they can replicate your run. (Also potential stream overlay, if I get it working, [seen here](https://i.imgur.com/Enjv4rL.png))
 - Portable: Works anywhere you can open a modern web browser.
 
 ## Seed System
 
-3. Export a seed to create a shareable code containing your current challenge setup.
-4. Import a seed to load someone else’s challenge or restore your own from a backup.
+1. Export a seed to create a shareable code containing your current challenge setup.
+2. Import a seed to load someone else’s challenge or restore your own from a backup.
 
 Even if you clear your browser cache or switch devices, you can restore your progress by importing your saved seed.
 
@@ -80,19 +80,19 @@ Temporary handicaps always last **one session** and naturally stack if multiple 
 
 Permanent handicaps are **game specific constraints** that persist across rotations. You can make these as light or as punishing as you want, from “no fast travel” to “permadeath for party members.”
 
-Each game can have a maximum of **3 permanent handicaps** to avoid softlocks. You can raise or lower this cap depending on how challenging you want the run to be.
+Each game can have a maximum of **3 permanent handicaps** to avoid softlocks. The option to raise or lower this cap will be added in a future update.
 
 Rolling a permanent handicap selects from that game’s database pool, avoiding duplicates.
 
-At the end of each rotation there is a **1% chance** to clear all permanent handicaps. This chance is fixed in the current version, but the option to change it will be added in a future update.
+At the end of each rotation there is a **1% chance** to clear all permanent handicaps. This chance is configurable in the Optional Rules (Settings) page.
 
-**Beating a game completely** immediately clears **3–4 random permanent handicaps** from your entire run, giving a strong incentive to finish titles rather than just rotate through them.
+**Beating a game completely** immediately clears **2–3 random permanent handicaps** from your active slots, giving a strong incentive to finish titles rather than just rotate through them.
 
 ---
 
 ## Tokens and Achievements
 
-Every achievement earned (in any game) has a **20% chance** to grant a token. This chance is fixed in the current version, but the option to change it or tie tokens to other milestones will be added in a future update.
+Every achievement earned (in any game) has a **20% chance** to grant a token. This chance is configurable in the Optional Rules (Settings) page, where you can also tie tokens to other milestones.
 
 Tokens can clear **one permanent handicap**.
 
@@ -104,7 +104,7 @@ You may use at most **one token per rotation**.
 
 Finishing a rotation (dying in the final game, or reaching the hour timer) clears all temporary handicaps.
 
-There is a **1% chance** at rotation end to also clear all permanent handicaps (configurable in a future update).
+There is a **1% chance** at rotation end to also clear all permanent handicaps (configurable in the Optional Rules (Settings) page).
 
 The rotation counter increases by one, and token usage limits reset.
 
@@ -118,7 +118,7 @@ Each slot lets you select a game from the database via a dropdown.
 
 Handicaps are automatically pulled for whatever game is actively slotted.
 
-Manual handicap assignment is not currently available, but may be added in the future for curated challenges.
+Manual handicap assignment is now available and can be enabled in the Optional Rules (Settings) page for curated challenges.
 
 ---
 
