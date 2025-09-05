@@ -37,10 +37,22 @@ Visit the live site here:
 
 ## Seed System
 
-1. Export a seed to create a shareable code containing your current challenge setup.
-2. Import a seed to load someone else’s challenge or restore your own from a backup.
+1. Export a seed to create a shareable code containing your **entire** current challenge setup.  
 
-Even if you clear your browser cache or switch devices, you can restore your progress by importing your saved seed.
+2. Import a seed to load someone else’s challenge or restore your own from a backup.  
+
+---
+
+Every single detail of your current challenge is stored in the seed — all settings, optional rules, timers, slot order, number of deaths, created games, permanent and temporary handicaps, and anything else you’ve configured.  
+
+Nothing is left out.  
+
+This means you can handcraft highly detailed, complex challenges and share them exactly as you designed them, or save them for yourself to revisit later.  
+
+---
+
+Even if you clear your browser cache or switch devices, you can restore your progress exactly as it was by importing your saved seed.
+
 
 ## Rules
 
