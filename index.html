@@ -102,7 +102,7 @@
     .btn-warning:hover { background-color: #e67e22; transform: translateY(-2px); }
     .btn-purple { background-color: var(--purple); color: white; }
     .btn-purple:hover { background-color: #8e44ad; transform: translateY(-2px); }
-    .btn-gray { background-color: #bdc3c7; color: white; cursor: not-allowed; }
+    .btn-gray { background-color: #bdc3c7; color: white; cursor: default; }
 
     .sidebar { display: flex; flex-direction: column; gap: 25px; }
     .panel { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; }
@@ -171,6 +171,20 @@
       .controls button { width: 100%; }
       .tabs { flex-direction: column; }
     }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--light);
+      margin: 20px 0;
+    }
+
+    #rulesContent p, #rulesContent ul {
+      margin-bottom: 1em; /* Adds space below paragraphs and lists */
+    }
+
+    #rulesContent li {
+      margin-bottom: 0.5em; /* Adds space between list items */
+    }
   </style>
 </head>
 <body>
@@ -225,6 +239,9 @@
               <button class="action-button btn-danger" onclick="showResetModal()">
                 <i class="fas fa-trash-alt"></i> Reset Progress
               </button>
+              <button class="action-button btn-primary" onclick="refreshUI()" style="margin-top: 15px;">
+                <i class="fas fa-sync-alt"></i> Refresh UI
+              </button>
             </div>
           </div>
 
@@ -244,7 +261,7 @@
                 <span id="activeHandicaps">0</span>
               </div>
               <div class="stat-item">
-                <span>Total Deaths:</span>
+                <span id="totalDeathsLabel">Total Deaths:</span>
                 <span id="totalDeaths">0</span>
               </div>
               <div class="stat-item">
@@ -299,60 +316,113 @@
 
     <div class="tab-content" id="rules-tab">
       <div class="panel">
-        <h2>Reroll Challenge rules</h2>
+        <div class="section-header">
+          <h2 id="rulesPageTitle">Reroll Challenge rules</h2>
+          <div>
+            <button class="btn-primary" onclick="toggleRulesPageMode()">
+              <i class="fas fa-cog"></i> <span id="rulesPageToggleButtonText">Show Settings</span>
+            </button>
+            <button class="btn-primary" onclick="refreshUI()" style="margin-left: 10px;">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+        </div>
 
-        <h3>Concept</h3>
-        <p>The Reroll Challenge helps you work through your game library by rotating through multiple games with escalating constraints. It's built for endurance, not speed. Play cleanly, manage risk, and keep momentum.</p>
+        <div id="rulesContent">
+          <h3>Concept</h3>
+          <p>The Reroll Challenge began as a way for me to have fun clearing my backlog, games I otherwise was not going to play. It worked by rotating through multiple titles with escalating constraints, keeping things fresh and giving me a reason to stick with them.</p>
+          <p>It has since grown into a modular framework & ruleset that can be shaped to fit almost any style of play. Much like a Nuzlocke run in Pokémon, it is a self‑imposed challenge designed to make familiar games feel new again, but here the structure is more streamlined and consistent thanks to the app automatically tracking timers, rotations, and handicaps for you.  </p>
+          <p>You can <strong>build your own pool of games</strong> for any platform or genre. You can <strong>create custom handicap lists</strong>, split into permanent and temporary rules, which are then pulled at random during play to keep you adapting on the fly. You can <strong>adjust rotation rules</strong> to swap games after a set time, a death, a level, or any trigger you choose. You can <strong>dynamically set different timers</strong> for each game, so a speedrun segment might get 15 minutes while a longer endurance section gets an hour. You can <strong>export and import seeds</strong> so others can run the exact same setup, whether for casual play, community races, or competitive speedruns.</p>
+          <p>Because the system does not hook into game code, it works with any game. You can apply the same framework to everything you play and customise the rules to fit your style. A long form endurance run might rotate between three RPGs, each with its own 90 minute timer and strict resource limits. A short experimental session could cycle through several platformers in 10 minute bursts with temporary handicaps like "must keep moving" or "no jumping for 30 seconds." A structured speedrun race could give each game a different timer based on its category length, paired with handicaps that force new routes or strategies. A community challenge night might use a viewer submitted seed with a curated mix of games, timers, and rules that everyone can load and attempt.</p>
+          <hr>
 
-        <h3>Rotation and sessions</h3>
-        <ul class="rules-list">
-          <li>Set up 3–10 slots. Each slot is one game in your rotation order.</li>
-          <li>Each session is 1 hour per slot, tracked with the slot's timer widget.</li>
-          <li>You progress through slots in order; when the final slot finishes, the rotation ends.</li>
-        </ul>
+          <h3>Rotation and Sessions</h3>
+          <p>Set up <strong>1–10 slots</strong>, each representing one game in your rotation order. The challenge works with any number, but more slots create more variety and allow temporary handicaps to spread across multiple games. Slots can also be used for different categories of the same game, alternate save files, or different difficulty settings.</p>
+          <p>Each session lasts <strong>1 hour per slot</strong>, tracked with the slot's timer widget. The timer length is fully adjustable per slot. You can give a speedrun segment 15 minutes, a grind heavy RPG 90 minutes, or run without a timer for a play until death format.</p>
+          <p>Progress through slots in order. When the final slot finishes, the rotation repeats. At the end of each rotation, all temporary handicaps are cleared.</p>
+          <hr>
 
-        <h3>Deaths and temporary handicaps</h3>
-        <ul class="rules-list">
-          <li>When you die in a slot, you immediately switch to the next slot.</li>
-          <li>That death also triggers a temporary handicap assigned to a future slot within the same rotation (only to slots appearing after the current slot; Slot 1 is inherently immune to temps caused in prior rotations since temps clear at rotation end).</li>
-          <li>Temporary handicaps last one session and clear automatically at the end of the rotation.</li>
-        </ul>
+          <h3>Deaths and Temporary Handicaps</h3>
+          <p>When you die in a slot, immediately switch to the next slot. You can change this trigger to something else, such as swapping on boss defeat, level completion, or a set number of in game days.</p>
+          <p>That death also triggers a <strong>temporary handicap</strong> assigned to a future slot within the same rotation. Only slots appearing after the current slot can receive the handicap. Slot 1 is immune to temporary handicaps caused in prior rotations, since all temps clear at rotation end.</p>
+          <p>Temporary handicaps always last <strong>one session</strong> and naturally stack if multiple deaths target the same future slot. In a large rotation, the final slot can end up carrying several temporary handicaps at once.</p>
+          <hr>
 
-        <h3>Permanent handicaps</h3>
-        <ul class="rules-list">
-          <li>Permanent handicaps are game-specific constraints that persist across rotations.</li>
-          <li>Each game can have at most 3 permanent handicaps to avoid softlocks.</li>
-          <li>Rolling a permanent handicap selects from that game's database pool, avoiding duplicates.</li>
-        </ul>
+          <h3>Permanent Handicaps</h3>
+          <p>Permanent handicaps are <strong>game specific constraints</strong> that persist across rotations. You can make these as light or as punishing as you want, from "no fast travel" to "permadeath for party members."</p>
+          <p>Each game can have a maximum of <strong>3 permanent handicaps</strong> to avoid softlocks. The option to raise or lower this cap will be added in a future update.</p>
+          <p>Rolling a permanent handicap selects from that game's database pool, avoiding duplicates.</p>
+          <p>At the end of each rotation there is a <strong>1% chance</strong> to clear all permanent handicaps. This chance is configurable in the <strong>Optional Rules (Settings)</strong> page.</p>
+          <p><strong>Beating a game completely</strong> immediately clears <strong>2–3 random permanent handicaps</strong> from your active slots, giving a strong incentive to finish titles rather than just rotate through them.</p>
+          <hr>
 
-        <h3>Tokens and achievements</h3>
-        <ul class="rules-list">
-          <li>Every achievement you earn (any game) has a 20% chance to grant a token.</li>
-          <li>Tokens can clear one permanent handicap. You may use at most one token per rotation.</li>
-        </ul>
+          <h3>Tokens and Achievements</h3>
+          <p>Every achievement earned (in any game) has a <strong>20% chance</strong> to grant a token. This chance is configurable in the <strong>Optional Rules (Settings)</strong> page, where you can also tie tokens to other milestones.</p>
+          <p>Tokens can clear <strong>one permanent handicap</strong>.</p>
+          <p>You may use at most <strong>one token per rotation</strong>.</p>
+          <hr>
 
-        <h3>Rotation end</h3>
-        <ul class="rules-list">
-          <li>Completing the final slot clears all temporary handicaps & adds 1 random Permanent handicap.</li>
-          <li>There's a 1% chance at rotation end to also clear all permanent handicaps.</li>
-          <li>Rotations completed increments; token usage resets.</li>
-        </ul>
+          <h3>Rotation End</h3>
+          <p>Finishing a rotation (dying in the final game, or reaching the hour timer) clears all temporary handicaps.</p>
+          <p>There is a <strong>1% chance</strong> at rotation end to also clear all permanent handicaps (configurable in the <strong>Optional Rules (Settings)</strong> page).</p>
+          <p>The rotation counter increases by one, and token usage limits reset.</p>
+          <hr>
 
-        <h3>Database and slots</h3>
-        <ul class="rules-list">
-          <li>Maintain a database of games with separate pools for permanent and temporary handicaps.</li>
-          <li>Each slot selects a game from the database via a dropdown.</li>
-          <li>All handicap rolls reference the selected game's database pools.</li>
-        </ul>
+          <h3>Database and Slots</h3>
+          <p>Maintain a database of games with separate pools for permanent and temporary handicaps. You can keep multiple databases for different genres, difficulty levels, or community events.</p>
+          <p>Each slot lets you select a game from the database via a dropdown.</p>
+          <p>Handicaps are automatically pulled for whatever game is actively slotted.</p>
+          <p>Manual handicap assignment is now available and can be enabled in the <strong>Optional Rules (Settings)</strong> page for curated challenges.</p>
+          <hr>
 
-        <h3>Reset behavior</h3>
-        <ul class="rules-list">
-          <li>Reset Progress clears deaths, timers, temporary handicaps, permanent handicaps attached to slots, token usage in rotation, tokens, and rotations count.</li>
-          <li>Reset does not remove slots, selected games, or the database itself.</li>
-        </ul>
+          <h3>Goal</h3>
+          <p>Clear all games in the <strong>fewest rotations possible</strong>. Fewer deaths, smarter plays, faster clears. Clearing a game entirely not only removes it from your backlog but also clears <strong>3–4 random permanent handicaps</strong>, making it a powerful way to improve your odds in the rest of the challenge. Or adapt the system for variety streaming, speedrun gauntlets, or community challenge events.</p>
+        </div>
 
-        <h3>Goal</h3>
-        <p>Clear all games in the fewest rotations possible. Fewer deaths, smarter plays, faster clears.</p>
+        <div id="settingsContent" style="display: none;">
+          <h2>Reroll Challenge Settings</h2>
+          <p>Here you can customize various aspects of your challenge.</p>
+
+          <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 20px; border-radius: 4px; color: #664d03;">
+            <strong>Note:</strong> Some changes may require a UI refresh to take full effect. Click the 'Refresh' button above.
+          </div>
+
+          <div class="form-group">
+            <label for="tokenDropRateInput">Achievement Token Drop Rate (%)</label>
+            <input type="number" id="tokenDropRateInput" min="0" max="100" step="1" value="20" onchange="updateSetting('tokenDropRate', this.value / 100)" />
+            <p class="hint">Every achievement earned has this chance to grant a token. Default: 20%</p>
+          </div>
+
+          <div class="form-group">
+            <label for="permClearChanceInput">Rotation End Permanent Handicap Clear Chance (%)</label>
+            <input type="number" id="permClearChanceInput" min="0" max="100" step="1" value="1" onchange="updateSetting('permClearChance', this.value / 100)" />
+            <p class="hint">At the end of each rotation, all permanent handicaps have this chance to be cleared. Default: 1%</p>
+          </div>
+
+          <div class="form-group">
+            <label for="manualHandicapsToggle">Enable Manual Handicap Assignment</label>
+            <input type="checkbox" id="manualHandicapsToggle" onchange="updateSetting('manualHandicapsEnabled', this.checked)" />
+            <p class="hint">Allows manual assignment of handicaps to slots, overriding automatic rolls. Default: Disabled</p>
+          </div>
+
+          <div class="form-group">
+            <label for="deathSystemNameInput">Name of Death Mechanic</label>
+            <input type="text" id="deathSystemNameInput" value="Deaths" onchange="updateSetting('deathSystemName', this.value)" />
+            <p class="hint">Customize the name for the 'Deaths' mechanic. This will update throughout the application. Default: Deaths</p>
+          </div>
+
+          <div class="form-group">
+            <label for="disableAutomatedHandicapGainsToggle">Disable Automated Handicap Gains (experimental)</label>
+            <input type="checkbox" id="disableAutomatedHandicapGainsToggle" onchange="updateSetting('disableAutomatedHandicapGains', this.checked)" />
+            <p class="hint">If enabled, temporary and permanent handicaps will not be automatically added after deaths or rotation completion. Default: Disabled</p>
+          </div>
+
+          <div class="form-group">
+            <label for="disableAutomatedHandicapRemovalsToggle">Disable Automated Handicap Removals (experimental)</label>
+            <input type="checkbox" id="disableAutomatedHandicapRemovalsToggle" onchange="updateSetting('disableAutomatedHandicapRemovals', this.checked)" />
+            <p class="hint">If enabled, permanent handicaps will not be automatically removed when a game is completed or at rotation end. Default: Disabled</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -494,6 +564,38 @@
     </div>
   </div>
 
+  <!-- Manual Assign Handicap Modal -->
+  <div class="modal" id="manualAssignHandicapModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Manually Assign Handicap</h2>
+        <span class="close" onclick="closeModal('manualAssignHandicapModal')">&times;</span>
+      </div>
+      <input type="hidden" id="manualAssignSlotId">
+      <div class="form-group">
+        <label for="manualAssignGameName">Game</label>
+        <input type="text" id="manualAssignGameName" readonly />
+      </div>
+      <div class="form-group">
+        <label for="manualAssignHandicapType">Handicap type</label>
+        <select id="manualAssignHandicapType" onchange="populateManualHandicaps()">
+          <option value="permanent">Permanent</option>
+          <option value="temporary">Temporary</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="manualAssignHandicap">Select Handicap</label>
+        <select id="manualAssignHandicap">
+          <option value="">-- Select a handicap --</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn-danger" onclick="closeModal('manualAssignHandicapModal')">Cancel</button>
+        <button class="btn-success" onclick="assignManualHandicap()">Assign</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Import Modal -->
   <div class="modal" id="importModal">
     <div class="modal-content">
@@ -533,7 +635,14 @@
       gameDatabase: [],
       permHandicaps: {},
       tempHandicaps: {},
-      totalCompletedRuns: 0 // New counter for total completed runs
+      totalCompletedRuns: 0, // New counter for total completed runs
+      // New modular rules page settings
+      tokenDropRate: 0.20, // 20% chance
+      permClearChance: 0.01, // 1% chance
+      manualHandicapsEnabled: false, // Default to false
+      deathSystemName: 'Deaths', // Default name for the death mechanic
+      disableAutomatedHandicapGains: false, // Default to false (experimental)
+      disableAutomatedHandicapRemovals: false // Default to false (experimental)
     };
 
     // Sample seeds for first run
@@ -597,6 +706,14 @@
           challengeData = JSON.parse(saved);
           // Ensure totalCompletedRuns is a number
           challengeData.totalCompletedRuns = Number(challengeData.totalCompletedRuns) || 0;
+          // Ensure new settings have default values if not present in saved data
+          challengeData.tokenDropRate = challengeData.tokenDropRate !== undefined ? challengeData.tokenDropRate : 0.20;
+          challengeData.permClearChance = challengeData.permClearChance !== undefined ? challengeData.permClearChance : 0.01;
+          challengeData.manualHandicapsEnabled = challengeData.manualHandicapsEnabled !== undefined ? challengeData.manualHandicapsEnabled : false;
+          challengeData.deathSystemName = challengeData.deathSystemName || 'Deaths';
+          challengeData.disableAutomatedHandicapGains = challengeData.disableAutomatedHandicapGains !== undefined ? challengeData.disableAutomatedHandicapGains : false;
+          challengeData.disableAutomatedHandicapRemovals = challengeData.disableAutomatedHandicapRemovals !== undefined ? challengeData.disableAutomatedHandicapRemovals : false;
+
           // Clean up timer intervals if any persisted incorrectly
           challengeData.slots.forEach(s => { s.timerInterval = null; s.timerActive = false; });
         } catch {
@@ -612,6 +729,7 @@
       updateTokenButton();
       renderDatabase();
       setupTabs();
+      renderSettings(); // Initialize settings UI
     }
 
     function loadSample() {
@@ -693,7 +811,7 @@
               </div>
             </div>
             <div class="game-progress">
-              <span>${slot.progress} | Deaths: ${slot.deaths}</span>
+              <span>${challengeData.deathSystemName}: ${slot.deaths}</span>
             </div>
           </div>
 
@@ -750,11 +868,16 @@
 
             <div class="controls">
               <button class="btn-primary" onclick="addDeath(${slot.id})">
-                <i class="fas fa-skull"></i> Add Death
+                <i class="fas fa-skull"></i> Add ${challengeData.deathSystemName === 'Deaths' ? 'Death' : challengeData.deathSystemName}
               </button>
               <button class="btn-success" onclick="markComplete(${slot.id})">
                 <i class="fas fa-check"></i> Mark Complete
               </button>
+              ${challengeData.manualHandicapsEnabled && slot.game ? `
+                <button class="btn-info" onclick="showManualAssignHandicapModal(${slot.id})">
+                  <i class="fas fa-wrench"></i> Assign Handicap
+                </button>
+              ` : ''}
             </div>
           ` : `
             <div class="handicap">Select a game from the dropdown to begin.</div>
@@ -867,6 +990,9 @@
       document.getElementById('rotationsCompleted').textContent = challengeData.rotationsCompleted;
       document.getElementById('tokenCount').textContent = challengeData.tokens;
       document.getElementById('totalCompletedRunsDisplay').textContent = challengeData.totalCompletedRuns; // Update the new counter display
+
+      // Update the death system name in the sidebar stat item title
+      document.getElementById('totalDeathsLabel').textContent = `${challengeData.deathSystemName}:`;
     }
 
     // Token button
@@ -935,11 +1061,18 @@
       }
 
       slot.deaths++;
+      
+      if (challengeData.disableAutomatedHandicapGains) {
+        renderGames();
+        showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}. Automated handicap gains are disabled.`);
+        return;
+      }
+
       // Assign temp handicap to a future slot with a game, excluding Slot 1 and completed slots
       const futureSlots = challengeData.slots.filter(s => s.id > slotId && s.game && s.id !== 1 && s.progress !== 'Completed');
       if (futureSlots.length === 0) {
         renderGames();
-        showResult('Death Added', `Added a death to ${escapeHtml(slot.game)}.<br>No eligible future slots to assign temporary handicaps.`);
+        showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>No eligible future slots to assign temporary handicaps.`);
         return;
       }
       const target = futureSlots[Math.floor(Math.random() * futureSlots.length)];
@@ -948,11 +1081,11 @@
         const randomHandicap = pool[Math.floor(Math.random() * pool.length)];
         target.temporaryHandicaps.push(randomHandicap);
         renderGames();
-        showResult('Death Added', `Added a death to ${escapeHtml(slot.game)}.<br>Temporary handicap added to ${escapeHtml(target.game)}:<br><strong>${escapeHtml(randomHandicap)}</strong>`);
+        showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>Temporary handicap added to ${escapeHtml(target.game)}:<br><strong>${escapeHtml(randomHandicap)}</strong>`);
         return;
       }
       renderGames();
-      showResult('Death Added', `Added a death to ${escapeHtml(slot.game)}.<br>No valid future slot or no temp handicaps in the target game pool.`);
+      showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>No valid future slot or no temp handicaps in the target game pool.`);
     }
 
     function markComplete(slotId) {
@@ -960,38 +1093,45 @@
       if (!slot) return;
       slot.progress = 'Completed';
 
-      // Remove 2-3 random permanent handicaps from any game
-      const numHandicapsToRemove = Math.floor(Math.random() * 2) + 2; // 2 or 3
-      let handicapsRemovedCount = 0;
-      let availablePermHandicaps = [];
-      for (const game in challengeData.permHandicaps) {
-        challengeData.permHandicaps[game].forEach(h => availablePermHandicaps.push({ game, handicap: h }));
-      }
-
-      // Shuffle available handicaps to pick randomly
-      for (let i = availablePermHandicaps.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [availablePermHandicaps[i], availablePermHandicaps[j]] = [availablePermHandicaps[j], availablePermHandicaps[i]];
-      }
-
       let removedHandicapMessages = [];
-      while (handicapsRemovedCount < numHandicapsToRemove && availablePermHandicaps.length > 0) {
-        const { game, handicap } = availablePermHandicaps.pop();
-        // Remove from any slots that might have this handicap
-        challengeData.slots.forEach(s => {
-          if (s.game === game) {
-            s.permanentHandicaps = s.permanentHandicaps.filter(h => h !== handicap);
-          }
-        });
-        removedHandicapMessages.push(`Removed <strong>${escapeHtml(handicap)}</strong> from <strong>${escapeHtml(game)}</strong>`);
-        handicapsRemovedCount++;
+      if (challengeData.disableAutomatedHandicapRemovals) {
+        // Automated handicap removals are disabled, skip removal logic
+        console.log("Automated handicap removals are disabled.");
+      } else {
+        // Remove 2-3 random permanent handicaps from any game
+        const numHandicapsToRemove = Math.floor(Math.random() * 2) + 2; // 2 or 3
+        let handicapsRemovedCount = 0;
+        let availablePermHandicaps = [];
+        for (const game in challengeData.permHandicaps) {
+          challengeData.permHandicaps[game].forEach(h => availablePermHandicaps.push({ game, handicap: h }));
+        }
+
+        // Shuffle available handicaps to pick randomly
+        for (let i = availablePermHandicaps.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [availablePermHandicaps[i], availablePermHandicaps[j]] = [availablePermHandicaps[j], availablePermHandicaps[i]];
+        }
+
+        while (handicapsRemovedCount < numHandicapsToRemove && availablePermHandicaps.length > 0) {
+          const { game, handicap } = availablePermHandicaps.pop();
+          // Remove from any slots that might have this handicap
+          challengeData.slots.forEach(s => {
+            if (s.game === game) {
+              s.permanentHandicaps = s.permanentHandicaps.filter(h => h !== handicap);
+            }
+          });
+          removedHandicapMessages.push(`Removed <strong>${escapeHtml(handicap)}</strong> from <strong>${escapeHtml(game)}</strong>`);
+          handicapsRemovedCount++;
+        }
       }
 
       renderGames();
       renderDatabase();
       saveData();
       let message = `Congratulations! You've completed ${escapeHtml(slot.game || 'this slot')}.<br>`;
-      if (removedHandicapMessages.length > 0) {
+      if (challengeData.disableAutomatedHandicapRemovals) {
+        message += `Automated handicap removals are disabled in settings.`;
+      } else if (removedHandicapMessages.length > 0) {
         message += `As a reward, the following permanent handicaps were removed:<br>${removedHandicapMessages.join('<br>')}`;
       } else {
         message += `No permanent handicaps were available to remove.`;
@@ -1025,6 +1165,10 @@
 
     // Rolls
     function rollTempHandicap() {
+      if (challengeData.disableAutomatedHandicapGains) {
+        showResult('Automated Gains Disabled', 'Automated temporary handicap gains are currently disabled in settings.');
+        return;
+      }
       // any slot with a game and not completed, excluding Slot 1
       const eligible = challengeData.slots.filter(s => s.game && s.progress !== 'Completed' && s.id !== 1);
       if (eligible.length === 0) {
@@ -1044,6 +1188,10 @@
     }
 
     function rollPermHandicap() {
+      if (challengeData.disableAutomatedHandicapGains) {
+        showResult('Automated Gains Disabled', 'Automated permanent handicap gains are currently disabled in settings.');
+        return;
+      }
       const eligible = challengeData.slots.filter(s => s.game && s.progress !== 'Completed');
       if (eligible.length === 0) {
         showResult('No Eligible Slots', 'No eligible slots found for permanent handicaps.');
@@ -1072,45 +1220,54 @@
 
     function completeRotation() {
       let clearedAll = false;
-      // 1% chance to clear permanent handicaps
-      if (Math.random() < 0.01) {
-        challengeData.slots.forEach(s => s.permanentHandicaps = []);
-        clearedAll = true;
+      // Chance to clear permanent handicaps based on setting
+      if (!challengeData.disableAutomatedHandicapRemovals) {
+        if (Math.random() < challengeData.permClearChance) {
+          challengeData.slots.forEach(s => s.permanentHandicaps = []);
+          clearedAll = true;
+        }
+      } else {
+        console.log("Automated permanent handicap clearing is disabled.");
       }
+
       // Clear temps, reset token usage, increment rotations
       challengeData.slots.forEach(s => s.temporaryHandicaps = []);
       challengeData.rotationsCompleted++;
       challengeData.tokenUsedThisRotation = false;
 
-      // Prepare a list of slots that are truly eligible to receive a new permanent handicap
-      let trulyEligibleTargets = [];
-      challengeData.slots.forEach(slot => {
-        // A slot is eligible if it has a game, is not completed, and has less than 3 permanent handicaps
-        if (slot.game && slot.progress !== 'Completed' && slot.permanentHandicaps.length < 3) {
-          const permPool = challengeData.permHandicaps[slot.game] || [];
-          // Filter the pool to find handicaps not already active on this slot
-          const availablePerms = permPool.filter(h => !slot.permanentHandicaps.includes(h));
-
-          // If there are any available and unapplied handicaps, this slot is a truly eligible target
-          if (availablePerms.length > 0) {
-            trulyEligibleTargets.push({ slot, availablePerms });
-          }
-        }
-      });
-
       let addedPermHandicapMessage = '';
-      if (trulyEligibleTargets.length > 0) {
-        // Pick a random truly eligible target
-        const randomTargetIndex = Math.floor(Math.random() * trulyEligibleTargets.length);
-        const { slot: targetSlot, availablePerms } = trulyEligibleTargets[randomTargetIndex];
-
-        // Pick a random available handicap for that target slot
-        const newPermHandicap = availablePerms[Math.floor(Math.random() * availablePerms.length)];
-        targetSlot.permanentHandicaps.push(newPermHandicap);
-        addedPermHandicapMessage = `<br>New permanent handicap added to ${escapeHtml(targetSlot.game)}:<br><strong>${escapeHtml(newPermHandicap)}</strong>`;
+      if (challengeData.disableAutomatedHandicapGains) {
+        addedPermHandicapMessage = `<br>Automated permanent handicap gains are disabled in settings.`;
       } else {
-        // This message only appears if NO slots are truly eligible across the entire rotation
-        addedPermHandicapMessage = `<br>No active game slots could receive a new permanent handicap this rotation. All eligible games either have their maximum handicaps, or all available handicaps from their database pool are already active on them.`;
+        // Prepare a list of slots that are truly eligible to receive a new permanent handicap
+        let trulyEligibleTargets = [];
+        challengeData.slots.forEach(slot => {
+          // A slot is eligible if it has a game, is not completed, and has less than 3 permanent handicaps
+          if (slot.game && slot.progress !== 'Completed' && slot.permanentHandicaps.length < 3) {
+            const permPool = challengeData.permHandicaps[slot.game] || [];
+            // Filter the pool to find handicaps not already active on this slot
+            const availablePerms = permPool.filter(h => !slot.permanentHandicaps.includes(h));
+
+            // If there are any available and unapplied handicaps, this slot is a truly eligible target
+            if (availablePerms.length > 0) {
+              trulyEligibleTargets.push({ slot, availablePerms });
+            }
+          }
+        });
+
+        if (trulyEligibleTargets.length > 0) {
+          // Pick a random truly eligible target
+          const randomTargetIndex = Math.floor(Math.random() * trulyEligibleTargets.length);
+          const { slot: targetSlot, availablePerms } = trulyEligibleTargets[randomTargetIndex];
+
+          // Pick a random available handicap for that target slot
+          const newPermHandicap = availablePerms[Math.floor(Math.random() * availablePerms.length)];
+          targetSlot.permanentHandicaps.push(newPermHandicap);
+          addedPermHandicapMessage = `<br>New permanent handicap added to ${escapeHtml(targetSlot.game)}:<br><strong>${escapeHtml(newPermHandicap)}</strong>`;
+        } else {
+          // This message only appears if NO slots are truly eligible across the entire rotation
+          addedPermHandicapMessage = `<br>No active game slots could receive a new permanent handicap this rotation. All eligible games either have their maximum handicaps, or all available handicaps from their database pool are already active on them.`;
+        }
       }
 
       // Stop timers
@@ -1124,11 +1281,16 @@
       } else {
         message = 'All temporary handicaps have been cleared. Ready for next rotation!';
       }
+      // Add automated handicap gains disabled message only if automated removals are NOT disabled and no perm handicap was added
+      if (challengeData.disableAutomatedHandicapRemovals) {
+        message += `<br>Automated permanent handicap removals are disabled in settings.`;
+      }
+
       showResult('Rotation Complete', message + addedPermHandicapMessage);
     }
 
     function rollAchievement() {
-      if (Math.random() < 0.2) {
+      if (Math.random() < challengeData.tokenDropRate) {
         challengeData.tokens++;
         renderGames();
         updateTokenButton();
@@ -1614,6 +1776,52 @@
       }
     }
 
+    // Generic function to update settings
+    function updateSetting(key, value) {
+      challengeData[key] = value;
+      saveData();
+      renderSettings(); // Re-render settings to reflect potential changes (e.g., checkbox state)
+    }
+
+    // Render settings page
+    function renderSettings() {
+      document.getElementById('tokenDropRateInput').value = (challengeData.tokenDropRate * 100).toFixed(0);
+      document.getElementById('permClearChanceInput').value = (challengeData.permClearChance * 100).toFixed(0);
+      document.getElementById('manualHandicapsToggle').checked = challengeData.manualHandicapsEnabled;
+      document.getElementById('deathSystemNameInput').value = challengeData.deathSystemName;
+      document.getElementById('disableAutomatedHandicapGainsToggle').checked = challengeData.disableAutomatedHandicapGains;
+      document.getElementById('disableAutomatedHandicapRemovalsToggle').checked = challengeData.disableAutomatedHandicapRemovals;
+      // Additional settings can be added here
+    }
+
+    // Modular Rules Page Toggle
+    function toggleRulesPageMode() {
+      const rulesContent = document.getElementById('rulesContent');
+      const settingsContent = document.getElementById('settingsContent');
+      const rulesPageTitle = document.getElementById('rulesPageTitle');
+      const toggleButtonText = document.getElementById('rulesPageToggleButtonText');
+      const toggleButtonIcon = document.querySelector('#rules-tab .section-header button i');
+
+      if (rulesContent.style.display !== 'none') {
+        // Switch to settings view
+        rulesContent.style.display = 'none';
+        settingsContent.style.display = 'block';
+        rulesPageTitle.textContent = 'Reroll Challenge Settings';
+        toggleButtonText.textContent = 'Show Rules';
+        toggleButtonIcon.classList.remove('fa-cog');
+        toggleButtonIcon.classList.add('fa-book'); // Change icon to a book for rules
+        renderSettings(); // Render settings when switching to settings view
+      } else {
+        // Switch back to rules view
+        rulesContent.style.display = 'block';
+        settingsContent.style.display = 'none';
+        rulesPageTitle.textContent = 'Reroll Challenge rules';
+        toggleButtonText.textContent = 'Show Settings';
+        toggleButtonIcon.classList.remove('fa-book');
+        toggleButtonIcon.classList.add('fa-cog'); // Change icon back to cog for settings
+      }
+    }
+
     // Game Edit/Delete
     function showEditGameModal(gameName) {
       document.getElementById('originalGameName').value = gameName;
@@ -1842,9 +2050,90 @@
       }, 150);
     }
 
+    // Manual Assign Handicap Functions
+    function showManualAssignHandicapModal(slotId) {
+      const slot = challengeData.slots.find(s => s.id === slotId);
+      if (!slot || !slot.game) {
+        showResult('No Game Selected', 'Please select a game for this slot before manually assigning handicaps.');
+        return;
+      }
+
+      document.getElementById('manualAssignSlotId').value = slotId;
+      document.getElementById('manualAssignGameName').value = slot.game;
+      document.getElementById('manualAssignHandicapType').value = 'permanent'; // Default to permanent
+
+      populateManualHandicaps(); // Populate dropdown based on initial type
+
+      document.getElementById('manualAssignHandicapModal').style.display = 'flex';
+    }
+
+    function populateManualHandicaps() {
+      const slotId = parseInt(document.getElementById('manualAssignSlotId').value);
+      const slot = challengeData.slots.find(s => s.id === slotId);
+      if (!slot) return;
+
+      const gameName = slot.game;
+      const type = document.getElementById('manualAssignHandicapType').value;
+      const handicapSelect = document.getElementById('manualAssignHandicap');
+      handicapSelect.innerHTML = '<option value="">-- Select a handicap --</option>';
+
+      const pool = type === 'permanent' ? (challengeData.permHandicaps[gameName] || []) : (challengeData.tempHandicaps[gameName] || []);
+      const currentHandicaps = type === 'permanent' ? slot.permanentHandicaps : slot.temporaryHandicaps;
+
+      const availableHandicaps = pool.filter(h => !currentHandicaps.includes(h));
+
+      availableHandicaps.forEach(h => {
+        const option = document.createElement('option');
+        option.value = h;
+        option.textContent = h;
+        handicapSelect.appendChild(option);
+      });
+    }
+
+    function assignManualHandicap() {
+      const slotId = parseInt(document.getElementById('manualAssignSlotId').value);
+      const type = document.getElementById('manualAssignHandicapType').value;
+      const selectedHandicap = document.getElementById('manualAssignHandicap').value;
+
+      if (!selectedHandicap) {
+        alert('Please select a handicap to assign.');
+        return;
+      }
+
+      const slot = challengeData.slots.find(s => s.id === slotId);
+      if (!slot) return;
+
+      let targetHandicapArray;
+      if (type === 'permanent') {
+        targetHandicapArray = slot.permanentHandicaps;
+      } else {
+        targetHandicapArray = slot.temporaryHandicaps;
+      }
+
+      if (targetHandicapArray.includes(selectedHandicap)) {
+        showResult('Handicap Already Assigned', `The ${type} handicap <strong>${escapeHtml(selectedHandicap)}</strong> is already assigned to ${escapeHtml(slot.game)}.`);
+      } else {
+        targetHandicapArray.push(selectedHandicap);
+        showResult('Handicap Assigned', `Manually assigned ${type} handicap to ${escapeHtml(slot.game)}:<br><strong>${escapeHtml(selectedHandicap)}</strong>`);
+      }
+
+      closeModal('manualAssignHandicapModal');
+      renderGames();
+      saveData();
+    }
+
+    // Refresh UI function
+    function refreshUI() {
+      renderGames();
+      updateStats();
+      updateTokenButton();
+      renderDatabase();
+      renderSettings();
+      showResult('UI Refreshed', 'All UI elements have been reloaded.');
+    }
+
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
-
 
