@@ -2,10 +2,22 @@
 
 A lightweight, browser-based challenge tracker with local save support and seed import/export for easy sharing. Designed for streamers, speedrunners, and solo players.
 
+## Getting Started
+
+### Online Version
+Visit the live site here:  
+**[Live Demo](https://Artorosia.github.io/Game-Reroll-Challenge)**
+
+### Local Version
+1. Download or clone this repository.
+2. Open `index.html` in your browser.
+3. Start tracking your challenge.
+
 ## Features
 
 - Seed system: Export or import your challenge state to back it up or share with others.
-- Streamer-friendly: Share a seed with your audience & they can replicate your run.
+- Streamer-friendly: Share a seed with your audience & they can replicate your run.(also potential stream overlay, if I get it working, [seen here](https://i.imgur.com/Enjv4rL.png)
+)
 - Portable: Works anywhere you can open a modern web browser.
 
 ## Seed System
@@ -86,18 +98,4 @@ It is built for endurance rather than speed. play cleanly, manage risk, and keep
 ### Goal
 Clear all games in the **fewest rotations possible**.  
 Fewer deaths, smarter plays, faster clears.
-
-
-## Getting Started
-
-### Online Version
-Visit the live site here:  
-**[Live Demo](https://Artorosia.github.io/Game-Reroll-Challenge)**
-
-### Local Version
-1. Download or clone this repository.
-2. Open `index.html` in your browser.
-3. Start tracking your challenge.
-
-## Folder Structure
 
