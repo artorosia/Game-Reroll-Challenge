@@ -43,7 +43,7 @@ Visit the live site here:
 
 ---
 
-Every single detail of your current challenge is stored in the seed — all settings, optional rules, timers, slot order, number of deaths, created games, permanent and temporary handicaps, and anything else you’ve configured.  
+Every single detail of your current challenge is stored in the seed. All settings, optional rules, timers, slot order, number of deaths, created games, permanent and temporary handicaps, and anything else you’ve configured.  
 
 Nothing is left out.  
 
