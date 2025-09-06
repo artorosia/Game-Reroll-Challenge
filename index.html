@@ -26,6 +26,7 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
       color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center;
       box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      position: relative; /* Added for absolute positioning of children */
     }
     h1 { margin-bottom: 10px; font-size: 2.5rem; }
     .subtitle { font-style: italic; opacity: 0.9; font-size: 1.1rem; }
@@ -57,7 +58,37 @@
     .game-card.completed .game-title { color: var(--success); }
     .game-card.dragging { opacity: 0.5; border: 2px dashed var(--secondary); }
     .game-card.drag-over { border: 2px solid var(--secondary); }
-    .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-right: 30px; /* Add padding to make space for the delete button */
+    }
+    .game-delete-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px; /* Adjust size as needed */
+      height: 40px; /* Adjust size as needed */
+      background: rgba(231, 76, 60, 0.1); /* Faded red */
+      border: none;
+      border-bottom-left-radius: 100%; /* Quarter circle for top-right */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2em;
+      color: transparent; /* Make icon invisible by default */
+      cursor: pointer;
+      opacity: 1; /* Keep opacity at 1, will fade with background color */
+      transition: all 0.2s ease-in-out;
+      z-index: 10; /* Ensure it's above other elements */
+    }
+    .game-delete-btn:hover {
+      opacity: 1;
+      background-color: var(--accent); /* Vibrant red on hover */
+      color: white; /* White icon on hover */
+    }
     .game-title { font-weight: bold; font-size: 1.1em; color: var(--primary); display: flex; align-items: center; gap: 10px; }
     .game-title select { padding: 6px 8px; border-radius: 6px; border: 1px solid #ddd; }
     .game-progress { font-size: 0.95em; color: #666; display: flex; gap: 15px; }
@@ -104,6 +135,13 @@
     .btn-purple:hover { background-color: #8e44ad; transform: translateY(-2px); }
     .btn-gray { background-color: #bdc3c7; color: white; cursor: default; }
 
+    /* Rarity Colors (Diablo-like) */
+    .rarity-common { color: var(--gray); /* White/Light Gray */ }
+    .rarity-uncommon { color: var(--success); /* Green */ }
+    .rarity-rare { color: var(--secondary); /* Blue */ }
+    .rarity-legendary { color: var(--purple); /* Purple */ }
+    .rarity-mythic { color: var(--warning); /* Orange */ }
+
     .sidebar { display: flex; flex-direction: column; gap: 25px; }
     .panel { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; }
     .panel h3 { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--light); color: var(--primary); }
@@ -126,6 +164,171 @@
     footer {
       text-align: center; margin-top: 40px; padding: 25px; color: #7f8c8d; font-size: 0.95em; background: white; border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode-toggle {
+      background: none; border: none; font-size: 1.5em; cursor: pointer; color: white; position: absolute; top: 30px; right: 30px;
+      transition: color 0.3s;
+    }
+    .dark-mode-toggle:hover {
+      color: var(--light);
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      --primary: #82a8cf;
+      --secondary: #5a9bd4;
+      --accent: #e06c75;
+      --light: #3b4252;
+      --dark: #eceff4;
+      --success: #67b867;
+      --warning: #e5c07b;
+      --purple: #c678dd;
+      --gray: #9baec8;
+
+      background-color: #282c34;
+      color: var(--dark);
+    }
+
+    body.dark-mode header {
+      background: linear-gradient(135deg, #3b4252 0%, #5a9bd4 100%);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    body.dark-mode .tabs, body.dark-mode .games-container, body.dark-mode .panel, body.dark-mode footer {
+      background: #21252b;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    body.dark-mode .tab:not(.active):hover {
+      background-color: #3b4252;
+    }
+
+    body.dark-mode .tab.active {
+      background-color: var(--secondary);
+    }
+
+    body.dark-mode .game-card {
+      border: 1px solid #3b4252;
+      background: #2c313a;
+    }
+
+    body.dark-mode .game-card:hover {
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    body.dark-mode .game-card.completed {
+      background-color: #3b4252;
+      border-color: var(--success);
+    }
+
+    body.dark-mode .game-title {
+      color: var(--dark);
+    }
+
+    body.dark-mode .game-progress {
+      color: var(--gray);
+    }
+
+    body.dark-mode .searchable-dropdown input {
+      background: #3b4252;
+      border-color: #4b5263;
+      color: var(--dark);
+    }
+
+    body.dark-mode .searchable-dropdown-results {
+      background: #21252b;
+      border-color: #4b5263;
+    }
+
+    body.dark-mode .searchable-dropdown-item:hover {
+      background-color: #3b4252;
+    }
+
+    body.dark-mode .handicap {
+      background: #3b4252;
+      border-color: #4b5263;
+    }
+
+    body.dark-mode .handicap-btn {
+      color: var(--gray);
+    }
+
+    body.dark-mode .timer-widget {
+      background: #3b4252;
+    }
+
+    body.dark-mode .section-header, body.dark-mode .panel h3 {
+      border-bottom-color: #4b5263;
+      color: var(--dark);
+    }
+
+    body.dark-mode .stat-item {
+      border-bottom-color: #4b5263;
+    }
+
+    body.dark-mode hr {
+      border-top-color: #4b5263;
+    }
+
+    body.dark-mode .modal-content {
+      background: #21252b;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    body.dark-mode .modal-header {
+      border-bottom-color: #4b5263;
+    }
+
+    body.dark-mode .close {
+      color: var(--gray);
+    }
+    body.dark-mode .close:hover {
+      color: var(--dark);
+    }
+
+    body.dark-mode .form-group input, body.dark-mode .form-group select, body.dark-mode .form-group textarea {
+      background: #3b4252;
+      border-color: #4b5263;
+      color: var(--dark);
+    }
+
+    body.dark-mode .db-handicap {
+      background: #3b4252;
+    }
+
+    body.dark-mode .db-game-title {
+      color: var(--dark);
+    }
+
+    body.dark-mode .form-group p.hint {
+      color: var(--gray);
+    }
+
+    body.dark-mode #rulesContent h3 {
+      color: var(--dark);
+    }
+
+    body.dark-mode #rulesContent p, body.dark-mode #rulesContent li {
+      color: var(--dark);
+    }
+
+    body.dark-mode .token-counter .token-icon {
+      color: var(--warning);
+    }
+
+    body.dark-mode .stats {
+      background: #3b4252;
+      color: var(--dark);
+    }
+
+    body.dark-mode .database-list > div {
+      background-color: #2c313a !important;
+      border: 1px dashed #4b5263 !important;
+    }
+
+    body.dark-mode .database-list > div p {
+      color: var(--gray) !important;
     }
 
     .database-list { max-height: 500px; overflow-y: auto; }
@@ -159,7 +362,115 @@
     .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;
     }
+    .form-group.min-slot-warning-checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .form-group.min-slot-warning-checkbox-group label {
+      margin-bottom: 0; /* Remove bottom margin to align with checkbox */
+      margin-left: 10px; /* Space between checkbox and label */
+    }
+    .form-group.min-slot-warning-checkbox-group input[type="checkbox"] {
+      width: auto; /* Allow checkbox to take its natural width */
+      padding: 0; /* Remove padding */
+      margin: 0; /* Remove margin */
+    }
     .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+    .setting-toggle-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      margin-bottom: 16px;
+      border: 2px solid transparent; /* default border */
+      position: relative;
+    }
+
+    .setting-toggle-button label {
+      flex-grow: 1;
+      cursor: pointer;
+      margin-bottom: 0; /* Override default form-group label margin */
+      font-weight: 500;
+      padding-right: 10px; /* Space between label and indicator */
+    }
+
+    .setting-toggle-button .hint {
+      position: absolute;
+      bottom: -20px; /* Adjust as needed */
+      left: 0;
+      font-size: 0.85em;
+      color: var(--gray);
+      width: 100%;
+      margin-top: 5px; /* Space below the button */
+    }
+
+    .setting-toggle-indicator {
+      padding: 5px 12px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+      min-width: 50px;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    /* ON state */
+    .setting-toggle-button.is-on {
+      background-color: rgba(46, 204, 113, 0.1); /* Faded green */
+      border-color: var(--success);
+    }
+    .setting-toggle-button.is-on:hover {
+      background-color: var(--accent); /* Red on hover */
+      border-color: var(--accent);
+    }
+    .setting-toggle-button.is-on:hover .setting-toggle-indicator {
+      background-color: #c0392b; /* Darker red */
+    }
+    .setting-toggle-button.is-on .setting-toggle-indicator {
+      background-color: var(--success); /* Solid green */
+    }
+
+    /* OFF state */
+    .setting-toggle-button.is-off {
+      background-color: rgba(231, 76, 60, 0.1); /* Faded red */
+      border-color: var(--accent);
+    }
+    .setting-toggle-button.is-off:hover {
+      background-color: var(--success); /* Green on hover */
+      border-color: var(--success);
+    }
+    .setting-toggle-button.is-off:hover .setting-toggle-indicator {
+      background-color: #27ae60; /* Darker green */
+    }
+    .setting-toggle-button.is-off .setting-toggle-indicator {
+      background-color: var(--accent); /* Solid red */
+    }
+
+    /* Dark Mode Overrides */
+    body.dark-mode .setting-toggle-button.is-on {
+      background-color: rgba(103, 184, 103, 0.15); /* Dark mode faded green */
+      border-color: var(--success);
+    }
+    body.dark-mode .setting-toggle-button.is-on:hover {
+      background-color: var(--accent); /* Dark mode red on hover */
+      border-color: var(--accent);
+    }
+    body.dark-mode .setting-toggle-button.is-off {
+      background-color: rgba(224, 108, 117, 0.15); /* Dark mode faded red */
+      border-color: var(--accent);
+    }
+    body.dark-mode .setting-toggle-button.is-off:hover {
+      background-color: var(--success); /* Dark mode green on hover */
+      border-color: var(--success);
+    }
+    body.dark-mode .setting-toggle-button.is-off .setting-toggle-indicator {
+      background-color: var(--accent); /* Solid red */
+    }
 
     @media (max-width: 992px) {
       .dashboard { grid-template-columns: 1fr; }
@@ -185,6 +496,7 @@
     #rulesContent li {
       margin-bottom: 0.5em; /* Adds space between list items */
     }
+
   </style>
 </head>
 <body>
@@ -192,12 +504,16 @@
     <header>
       <h1><i class="fas fa-dice"></i> Reroll Challenge</h1>
       <p class="subtitle">Rotate through games with increasing challenges.</p>
+      <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <i class="fas fa-moon"></i>
+      </button>
     </header>
 
     <div class="tabs">
       <div class="tab active" data-tab="challenge">Challenge</div>
       <div class="tab" data-tab="database">Game & Handicap Database</div>
       <div class="tab" data-tab="rules">Rules</div>
+      <div class="tab" data-tab="notes">Notes</div>
     </div>
 
     <div class="tab-content active" id="challenge-tab">
@@ -208,9 +524,6 @@
             <div>
               <button class="btn-primary" onclick="addSlot()">
                 <i class="fas fa-plus"></i> Add Slot
-              </button>
-              <button class="btn-danger" onclick="removeSlot()">
-                <i class="fas fa-minus"></i> Remove Slot
               </button>
             </div>
           </div>
@@ -231,7 +544,7 @@
                 <i class="fas fa-flag-checkered"></i> Complete Rotation
               </button>
               <button class="action-button btn-warning" onclick="rollAchievement()">
-                <i class="fas fa-trophy"></i> Roll for Achievement Token
+                <i class="fas fa-trophy"></i> Roll for <span id="rollAchievementButtonText"></span> Token
               </button>
               <button class="action-button btn-purple" onclick="useToken()" id="useTokenBtn">
                 <i class="fas fa-coins"></i> Use Token to Clear Handicap
@@ -356,8 +669,8 @@
           <p><strong>Beating a game completely</strong> immediately clears <strong>2–3 random permanent handicaps</strong> from your active slots, giving a strong incentive to finish titles rather than just rotate through them.</p>
           <hr>
 
-          <h3>Tokens and Achievements</h3>
-          <p>Every achievement earned (in any game) has a <strong>20% chance</strong> to grant a token. This chance is configurable in the <strong>Optional Rules (Settings)</strong> page, where you can also tie tokens to other milestones.</p>
+          <h3>Tokens and <span id="rulesAchievementsTitle">Achievements</span></h3>
+          <p>Every <span id="rulesAchievementText1">achievement</span> earned (in any game) has a <strong>20% chance</strong> to grant a token. This chance is configurable in the <strong>Optional Rules (Settings)</strong> page, where you can also tie tokens to other milestones.</p>
           <p>Tokens can clear <strong>one permanent handicap</strong>.</p>
           <p>You may use at most <strong>one token per rotation</strong>.</p>
           <hr>
@@ -388,9 +701,9 @@
           </div>
 
           <div class="form-group">
-            <label for="tokenDropRateInput">Achievement Token Drop Rate (%)</label>
+            <label for="tokenDropRateInput"><span id="settingsAchievementDropRateLabel">Achievement</span> Token Drop Rate (%)</label>
             <input type="number" id="tokenDropRateInput" min="0" max="100" step="1" value="20" onchange="updateSetting('tokenDropRate', this.value / 100)" />
-            <p class="hint">Every achievement earned has this chance to grant a token. Default: 20%</p>
+            <p class="hint"><span id="settingsAchievementHint1"></span> Default: 20%</p>
           </div>
 
           <div class="form-group">
@@ -400,28 +713,72 @@
           </div>
 
           <div class="form-group">
-            <label for="manualHandicapsToggle">Enable Manual Handicap Assignment</label>
-            <input type="checkbox" id="manualHandicapsToggle" onchange="updateSetting('manualHandicapsEnabled', this.checked)" />
-            <p class="hint">Allows manual assignment of handicaps to slots, overriding automatic rolls. Default: Disabled</p>
-          </div>
-
-          <div class="form-group">
             <label for="deathSystemNameInput">Name of Death Mechanic</label>
             <input type="text" id="deathSystemNameInput" value="Deaths" onchange="updateSetting('deathSystemName', this.value)" />
             <p class="hint">Customize the name for the 'Deaths' mechanic. This will update throughout the application. Default: Deaths</p>
           </div>
 
           <div class="form-group">
-            <label for="disableAutomatedHandicapGainsToggle">Disable Automated Handicap Gains (experimental)</label>
-            <input type="checkbox" id="disableAutomatedHandicapGainsToggle" onchange="updateSetting('disableAutomatedHandicapGains', this.checked)" />
-            <p class="hint">If enabled, temporary and permanent handicaps will not be automatically added after deaths or rotation completion. Default: Disabled</p>
+            <label for="achievementSystemNameInput">Name of Achievement System</label>
+            <input type="text" id="achievementSystemNameInput" value="Achievement" onchange="updateSetting('achievementSystemName', this.value)" />
+            <p class="hint">Customize the name for the 'Achievement' mechanic. This will update throughout the application. Default: Achievement</p>
           </div>
 
-          <div class="form-group">
-            <label for="disableAutomatedHandicapRemovalsToggle">Disable Automated Handicap Removals (experimental)</label>
-            <input type="checkbox" id="disableAutomatedHandicapRemovalsToggle" onchange="updateSetting('disableAutomatedHandicapRemovals', this.checked)" />
-            <p class="hint">If enabled, permanent handicaps will not be automatically removed when a game is completed or at rotation end. Default: Disabled</p>
+          <hr>
+
+          <h3>Toggle Settings</h3>
+          <div class="settings-toggle-group">
+            <div class="form-group setting-toggle-button" id="manualHandicapsToggleContainer" onclick="toggleSettingUI('manualHandicapsEnabled')">
+              <label>Enable Manual Handicap Assignment</label>
+              <span class="setting-toggle-indicator"></span>
+              <p class="hint">Allows manual assignment of handicaps to slots, overriding automatic rolls. Default: Disabled</p>
+            </div>
+
+            <div class="form-group setting-toggle-button" id="disableAutomatedHandicapGainsToggleContainer" onclick="toggleSettingUI('disableAutomatedHandicapGains')">
+              <label>Disable Automated Handicap Gains (experimental)</label>
+              <span class="setting-toggle-indicator"></span>
+              <p class="hint">If enabled, temporary and permanent handicaps will not be automatically added after deaths or rotation completion. Default: Disabled</p>
+            </div>
+
+            <div class="form-group setting-toggle-button" id="disableAutomatedHandicapRemovalsToggleContainer" onclick="toggleSettingUI('disableAutomatedHandicapRemovals')">
+              <label>Disable Automated Handicap Removals (experimental)</label>
+              <span class="setting-toggle-indicator"></span>
+              <p class="hint">If enabled, permanent handicaps will not be automatically removed when a game is completed or at rotation end. Default: Disabled</p>
+            </div>
+
+            <div class="form-group setting-toggle-button" id="customMaxPermHandicapsToggleContainer" onclick="toggleSettingUI('customMaxPermHandicapsEnabled')">
+              <label>Enable Custom Max Permanent Handicaps</label>
+              <span class="setting-toggle-indicator"></span>
+              <p class="hint">If enabled, you can set a custom maximum number of permanent handicaps per game. Default: Disabled</p>
+            </div>
+
+            <div class="form-group setting-toggle-button" id="dontShowMinSlotWarningToggleContainer" onclick="toggleSettingUI('dontShowMinSlotWarning')">
+              <label>Don't show minimum slot warning</label>
+              <span class="setting-toggle-indicator"></span>
+              <p class="hint">If checked, the warning about removing slots when 3 or fewer are active will not be shown. Default: Disabled</p>
+            </div>
           </div>
+          <hr>
+
+          <h3>Rarity Settings</h3>
+          <div id="raritySettingsContainer"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="notes-tab">
+      <div class="panel">
+        <div class="section-header">
+          <h2>Challenge Notes</h2>
+          <div>
+            <button class="btn-success" onclick="saveNotes()">
+              <i class="fas fa-save"></i> Save Notes
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea id="challengeNotes" rows="15" placeholder="Write your challenge notes here..."></textarea>
         </div>
       </div>
     </div>
@@ -453,12 +810,20 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="handicapRarity">Rarity</label>
+        <select id="handicapRarity"></select>
+      </div>
+      <div class="form-group">
         <label for="handicapName">Handicap name</label>
         <input id="handicapName" placeholder="Enter handicap name"/>
       </div>
       <div class="form-group">
         <label for="handicapDescription">Description (optional)</label>
         <textarea id="handicapDescription" placeholder="Enter description"></textarea>
+      </div>
+      <div class="form-group" id="maxPermHandicapsGroup">
+        <label for="maxPermHandicapsInput">Max Permanent Handicaps (for this game)</label>
+        <input type="number" id="maxPermHandicapsInput" min="1" value="3"/>
       </div>
       <div class="form-group">
         <label for="bulkHandicaps">Add multiple handicaps (one per line)</label>
@@ -484,6 +849,10 @@
         <label for="editedGameName">Game Name</label>
         <input id="editedGameName" placeholder="Enter new game name"/>
       </div>
+      <div class="form-group">
+        <label for="editedMaxPermHandicaps">Max Permanent Handicaps</label>
+        <input type="number" id="editedMaxPermHandicaps" min="1" value="3"/>
+      </div>
       <div class="form-actions">
         <button class="btn-danger" onclick="closeModal('editGameModal')">Cancel</button>
         <button class="btn-success" onclick="saveEditedGame()">Save Changes</button>
@@ -502,6 +871,7 @@
       <input type="hidden" id="originalEditGameName">
       <input type="hidden" id="originalEditHandicapType">
       <input type="hidden" id="originalEditHandicap">
+      <input type="hidden" id="originalEditHandicapRarity">
       <div class="form-group">
         <label for="editGameName">Game</label>
         <div style="display:flex; gap:10px;">
@@ -515,6 +885,10 @@
           <option value="permanent">Permanent</option>
           <option value="temporary">Temporary</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label for="editHandicapRarity">Rarity</label>
+        <select id="editHandicapRarity"></select>
       </div>
       <div class="form-group">
         <label for="editHandicapName">Handicap name</label>
@@ -559,6 +933,7 @@
       </div>
       <div class="form-actions">
         <button class="btn-primary" onclick="copyExportData()"><i class="fas fa-copy"></i> Copy</button>
+        <button class="btn-success" onclick="downloadSeedAsTxt()"><i class="fas fa-download"></i> Download .txt</button>
         <button class="btn-danger" onclick="closeModal('exportModal')">Close</button>
       </div>
     </div>
@@ -607,8 +982,13 @@
       <div class="form-group">
         <textarea id="importData" rows="8" style="width:100%; font-family:monospace;" placeholder="Paste seed here"></textarea>
       </div>
+      <div class="form-group" style="margin-top: 20px;">
+        <label for="importFile">Or import from .txt file:</label>
+        <input type="file" id="importFile" accept=".txt" style="width:100%; padding: 10px 0;"/>
+      </div>
       <div class="form-actions">
         <button class="btn-success" onclick="importChallengeData()"><i class="fas fa-file-import"></i> Import</button>
+        <button class="btn-primary" onclick="importSeedFromFile()"><i class="fas fa-file-upload"></i> Import from File</button>
         <button class="btn-danger" onclick="closeModal('importModal')">Cancel</button>
       </div>
     </div>
@@ -625,6 +1005,26 @@
     </div>
   </div>
 
+  <!-- Minimum Slots Warning Modal -->
+  <div class="modal" id="minSlotWarningModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Warning: Fewer Slots May Increase Difficulty</h2>
+        <span class="close" onclick="closeModal('minSlotWarningModal')">&times;</span>
+      </div>
+      <p>The Reroll Challenge was originally designed around having at least 3 active games for the early game of the challenge. Reducing the number of active slots below this may significantly increase the challenge's difficulty, especially when using default rules.</p>
+      <p>Are you sure you want to proceed with removing this slot?</p>
+      <div class="form-group min-slot-warning-checkbox-group">
+        <input type="checkbox" id="dontShowMinSlotWarningModalToggle" onchange="updateSetting('dontShowMinSlotWarning', this.checked)" />
+        <label for="dontShowMinSlotWarningModalToggle">Don't show this warning again</label>
+      </div>
+      <div class="form-actions">
+        <button class="btn-danger" onclick="closeModal('minSlotWarningModal'); handleMinSlotWarningResponse(false);">Cancel</button>
+        <button class="btn-primary" onclick="closeModal('minSlotWarningModal'); handleMinSlotWarningResponse(true);">Proceed</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Core data
     let challengeData = {
@@ -636,14 +1036,28 @@
       permHandicaps: {},
       tempHandicaps: {},
       totalCompletedRuns: 0, // New counter for total completed runs
+      challengeNotes: "", // New field for user notes
+      darkMode: false, // New field for dark mode state
+      gameSettings: {}, // Stores game-specific settings, e.g., max permanent handicaps
       // New modular rules page settings
       tokenDropRate: 0.20, // 20% chance
       permClearChance: 0.01, // 1% chance
       manualHandicapsEnabled: false, // Default to false
       deathSystemName: 'Deaths', // Default name for the death mechanic
       disableAutomatedHandicapGains: false, // Default to false (experimental)
-      disableAutomatedHandicapRemovals: false // Default to false (experimental)
+      disableAutomatedHandicapRemovals: false, // Default to false (experimental)
+      customMaxPermHandicapsEnabled: false, // Default to false
+      dontShowMinSlotWarning: false, // New setting for warning on removing down to 2 slots
+      rarityTiers: { // Default rarity tiers and weights
+        "Common": { weight: 10, colorClass: "rarity-common" },
+        "Uncommon": { weight: 6, colorClass: "rarity-uncommon" },
+        "Rare": { weight: 3, colorClass: "rarity-rare" },
+        "Legendary": { weight: 1, colorClass: "rarity-legendary" },
+        "Mythic": { weight: 0.5, colorClass: "rarity-mythic" }
+      }
     };
+
+    let slotToRemoveId = null; // New global variable to store the ID of the slot to be removed
 
     // Sample seeds for first run
     const sampleGames = [
@@ -655,46 +1069,46 @@
     ];
     const samplePermHandicaps = {
       "Vampire: The Masquerade – Bloodlines": [
-        "Clan Loyalty - Must pick one Discipline and always prioritize it when spending XP",
-        "No Easy Meal - Must avoid feeding on innocents; only feed on criminals, enemies, or blood packs"
+        { name: "Clan Loyalty", description: "Must pick one Discipline and always prioritize it when spending XP", rarity: "Common" },
+        { name: "No Easy Meal", description: "Must avoid feeding on innocents; only feed on criminals, enemies, or blood packs", rarity: "Uncommon" }
       ],
       "Enderal": [
-        "Ascetic Path - No food/drink buffs",
-        "Class Purist - Stick to one archetype tree"
+        { name: "Ascetic Path", description: "No food/drink buffs", rarity: "Common" },
+        { name: "Class Purist", description: "Stick to one archetype tree", rarity: "Rare" }
       ],
       "Amazing Cultivation Simulator": [
-        "No Outer Sect - Cannot recruit or interact with any outer sects for the rest of the run",
-        "One Life - If a disciple dies, the run ends"
+        { name: "No Outer Sect", description: "Cannot recruit or interact with any outer sects for the rest of the run", rarity: "Uncommon" },
+        { name: "One Life", description: "If a disciple dies, the run ends", rarity: "Legendary" }
       ],
       "Fallout 76": [
-        "Scavenger Only - No vendor purchases",
-        "Pacifist Trades - No PvP engagements"
+        { name: "Scavenger Only", description: "No vendor purchases", rarity: "Common" },
+        { name: "Pacifist Trades", description: "No PvP engagements", rarity: "Uncommon" }
       ],
       "Age of Decadence": [
-        "No Save Scum - One try per check",
-        "Faction Loyalist - Commit to first faction choice"
+        { name: "No Save Scum", description: "One try per check", rarity: "Rare" },
+        { name: "Faction Loyalist", description: "Commit to first faction choice", rarity: "Common" }
       ]
     };
     const sampleTempHandicaps = {
       "Vampire: The Masquerade – Bloodlines": [
-        "Hunger Unchecked - Cannot feed until the end of the current questline",
-        "Beast's Restraint - No blood disciplines in one major dungeon"
+        { name: "Hunger Unchecked", description: "Cannot feed until the end of the current questline", rarity: "Uncommon" },
+        { name: "Beast's Restraint", description: "No blood disciplines in one major dungeon", rarity: "Common" }
       ],
       "Enderal": [
-        "The Long Night - Travel only by night",
-        "Blind Pilgrim - No map use for one major journey"
+        { name: "The Long Night", description: "Travel only by night", rarity: "Uncommon" },
+        { name: "Blind Pilgrim", description: "No map use for one major journey", rarity: "Rare" }
       ],
       "Amazing Cultivation Simulator": [
-        "One Disciple Sect - Limit recruitment to one disciple for this session",
-        "Manual Labor Only - No automation this session"
+        { name: "One Disciple Sect", description: "Limit recruitment to one disciple for this session", rarity: "Common" },
+        { name: "Manual Labor Only", description: "No automation this session", rarity: "Rare" }
       ],
       "Fallout 76": [
-        "Iron Stomach - No food buffs this session",
-        "Barebones - No Power Armor this session"
+        { name: "Iron Stomach", description: "No food buffs this session", rarity: "Uncommon" },
+        { name: "Barebones", description: "No Power Armor this session", rarity: "Common" }
       ],
       "Age of Decadence": [
-        "No Merchants - Use only looted gear this session",
-        "Silent Tongue - No persuasion checks this session"
+        { name: "No Merchants", description: "Use only looted gear this session", rarity: "Uncommon" },
+        { name: "Silent Tongue", description: "No persuasion checks this session", rarity: "Common" }
       ]
     };
 
@@ -713,6 +1127,51 @@
           challengeData.deathSystemName = challengeData.deathSystemName || 'Deaths';
           challengeData.disableAutomatedHandicapGains = challengeData.disableAutomatedHandicapGains !== undefined ? challengeData.disableAutomatedHandicapGains : false;
           challengeData.disableAutomatedHandicapRemovals = challengeData.disableAutomatedHandicapRemovals !== undefined ? challengeData.disableAutomatedHandicapRemovals : false;
+          challengeData.customMaxPermHandicapsEnabled = challengeData.customMaxPermHandicapsEnabled !== undefined ? challengeData.customMaxPermHandicapsEnabled : false;
+          challengeData.dontShowMinSlotWarning = challengeData.dontShowMinSlotWarning !== undefined ? challengeData.dontShowMinSlotWarning : false;
+          challengeData.challengeNotes = challengeData.challengeNotes !== undefined ? challengeData.challengeNotes : ""; // Ensure notes are loaded
+          challengeData.darkMode = challengeData.darkMode !== undefined ? challengeData.darkMode : false; // Ensure dark mode setting is loaded
+          challengeData.gameSettings = challengeData.gameSettings !== undefined ? challengeData.gameSettings : {}; // Initialize game settings
+
+          challengeData.achievementSystemName = challengeData.achievementSystemName || 'Achievement';
+
+          // Initialize rarityTiers if not present (for backward compatibility)
+          if (!challengeData.rarityTiers) {
+            challengeData.rarityTiers = {
+              "Common": { weight: 10, colorClass: "rarity-common" },
+              "Uncommon": { weight: 6, colorClass: "rarity-uncommon" },
+              "Rare": { weight: 3, colorClass: "rarity-rare" },
+              "Legendary": { weight: 1, colorClass: "rarity-legendary" },
+              "Mythic": { weight: 0.5, colorClass: "rarity-mythic" }
+            };
+          }
+
+          // Migrate old handicap format to new object format with default rarity
+          for (const game in challengeData.permHandicaps) {
+            if (Array.isArray(challengeData.permHandicaps[game]) && challengeData.permHandicaps[game].length > 0 && typeof challengeData.permHandicaps[game][0] === 'string') {
+              challengeData.permHandicaps[game] = challengeData.permHandicaps[game].map(h => {
+                const parts = h.split(' - ');
+                return { name: parts[0], description: parts.length > 1 ? parts.slice(1).join(' - ') : '', rarity: 'Common' };
+              });
+            }
+          }
+          for (const game in challengeData.tempHandicaps) {
+            if (Array.isArray(challengeData.tempHandicaps[game]) && challengeData.tempHandicaps[game].length > 0 && typeof challengeData.tempHandicaps[game][0] === 'string') {
+              challengeData.tempHandicaps[game] = challengeData.tempHandicaps[game].map(h => {
+                const parts = h.split(' - ');
+                return { name: parts[0], description: parts.length > 1 ? parts.slice(1).join(' - ') : '', rarity: 'Common' };
+              });
+            }
+          }
+
+          // Ensure each game in the database has a maxPermHandicaps setting
+          challengeData.gameDatabase.forEach(game => {
+            if (!challengeData.gameSettings[game]) {
+              challengeData.gameSettings[game] = { maxPermHandicaps: 3 };
+            } else if (challengeData.gameSettings[game].maxPermHandicaps === undefined) {
+              challengeData.gameSettings[game].maxPermHandicaps = 3;
+            }
+          });
 
           // Clean up timer intervals if any persisted incorrectly
           challengeData.slots.forEach(s => { s.timerInterval = null; s.timerActive = false; });
@@ -724,12 +1183,26 @@
       }
       ensureAtLeastThreeSlots();
 
+      // Apply dark mode immediately on init if enabled
+      if (challengeData.darkMode) {
+        document.body.classList.add('dark-mode');
+        const toggleBtn = document.querySelector('.dark-mode-toggle i');
+        if (toggleBtn) {
+          toggleBtn.classList.remove('fa-moon');
+          toggleBtn.classList.add('fa-sun');
+        }
+      }
+
       renderGames();
       updateStats();
       updateTokenButton();
       renderDatabase();
       setupTabs();
       renderSettings(); // Initialize settings UI
+      loadNotes(); // Load notes when initializing
+
+      // Update achievement button text in init
+      // document.getElementById('rollAchievementButtonText').textContent = challengeData.achievementSystemName;
     }
 
     function loadSample() {
@@ -741,8 +1214,20 @@
         gameDatabase: [...sampleGames],
         permHandicaps: JSON.parse(JSON.stringify(samplePermHandicaps)),
         tempHandicaps: JSON.parse(JSON.stringify(sampleTempHandicaps)),
-        totalCompletedRuns: 0 // Initialize for sample data
+        totalCompletedRuns: 0, // Initialize for sample data
+        rarityTiers: { // Default rarity tiers and weights for sample data
+          "Common": { weight: 10, colorClass: "rarity-common" },
+          "Uncommon": { weight: 6, colorClass: "rarity-uncommon" },
+          "Rare": { weight: 3, colorClass: "rarity-rare" },
+          "Legendary": { weight: 1, colorClass: "rarity-legendary" },
+          "Mythic": { weight: 0.5, colorClass: "rarity-mythic" }
+        },
+        achievementSystemName: 'Achievement' // Initialize for sample data
       };
+      // Initialize gameSettings for sample games
+      sampleGames.forEach(game => {
+        challengeData.gameSettings[game] = { maxPermHandicaps: 3 };
+      });
     }
 
     function ensureAtLeastThreeSlots() {
@@ -757,8 +1242,8 @@
         game: "",
         progress: "Not Started",
         deaths: 0,
-        permanentHandicaps: [],
-        temporaryHandicaps: [],
+        permanentHandicaps: [], // Now stores handicap objects
+        temporaryHandicaps: [], // Now stores handicap objects
         timer: 3600, // Initialize to 60 minutes (3600 seconds)
         timerActive: false,
         timerInterval: null,
@@ -779,6 +1264,10 @@
           document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
           tab.classList.add('active');
           document.getElementById(`${name}-tab`).classList.add('active');
+          // If the notes tab is clicked, load the saved notes
+          if (name === 'notes') {
+            loadNotes();
+          }
         });
       });
     }
@@ -813,6 +1302,9 @@
             <div class="game-progress">
               <span>${challengeData.deathSystemName}: ${slot.deaths}</span>
             </div>
+            <button class="game-delete-btn" onclick="removeSlot(${slot.id})" title="Remove Slot">
+              
+            </button>
           </div>
 
           ${slot.game ? `
@@ -822,9 +1314,9 @@
                 ${slot.permanentHandicaps.length > 0 ?
                   slot.permanentHandicaps.map(h => `
                     <div class="handicap permanent">
-                      <span>${escapeHtml(h)}</span>
+                      <span class="${challengeData.rarityTiers[h.rarity]?.colorClass || ''}">${escapeHtml(h.name + (h.description ? ' - ' + h.description : ''))} (${h.rarity})</span>
                       <div class="handicap-actions">
-                        <button class="handicap-btn" title="Remove" onclick="clearSpecificHandicap(${slot.id}, 'permanent', '${escapeAttr(h)}')">
+                        <button class="handicap-btn" title="Remove" onclick="clearSpecificHandicap(${slot.id}, 'permanent', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')">
                           <i class="fas fa-times"></i>
                         </button>
                       </div>
@@ -837,15 +1329,19 @@
                 ${slot.temporaryHandicaps.length > 0 ?
                   slot.temporaryHandicaps.map(h => `
                     <div class="handicap temporary">
-                      <span>${escapeHtml(h)}</span>
+                      <span class="${challengeData.rarityTiers[h.rarity]?.colorClass || ''}">${escapeHtml(h.name + (h.description ? ' - ' + h.description : ''))} (${h.rarity})</span>
                       <div class="handicap-actions">
-                        <button class="handicap-btn" title="Remove" onclick="clearSpecificHandicap(${slot.id}, 'temporary', '${escapeAttr(h)}')">
+                        <button class="handicap-btn" title="Remove" onclick="clearSpecificHandicap(${slot.id}, 'temporary', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')">
                           <i class="fas fa-times"></i>
                         </button>
                       </div>
                     </div>
                   `).join('') : `<div class="handicap">None</div>`
                 }
+              </div>
+              <div class="handicap-section" style="grid-column: 1 / -1; ${challengeData.customMaxPermHandicapsEnabled ? '' : 'display: none;'}">
+                <strong>Max Permanent Handicaps</strong>
+                <input type="number" id="slotMaxPermHandicaps-${slot.id}" value="${challengeData.gameSettings[slot.game]?.maxPermHandicaps || 3}" min="1" onchange="updateSlotMaxPermHandicaps(${slot.id}, this.value)" style="width: 80px; padding: 6px; border-radius: 6px; border: 1px solid #ddd; margin-top: 5px;"/>
               </div>
             </div>
 
@@ -993,6 +1489,12 @@
 
       // Update the death system name in the sidebar stat item title
       document.getElementById('totalDeathsLabel').textContent = `${challengeData.deathSystemName}:`;
+
+      // Update achievement button text
+      const rollAchievementButtonText = document.getElementById('rollAchievementButtonText');
+      if (rollAchievementButtonText) {
+        rollAchievementButtonText.textContent = challengeData.achievementSystemName;
+      }
     }
 
     // Token button
@@ -1021,16 +1523,47 @@
       showResult('Slot Added', 'Added a new slot to your rotation.');
     }
 
-    function removeSlot() {
-      if (challengeData.slots.length <= 3) {
-        showResult('Minimum Slots', 'You must have at least 3 slots.');
-        return;
+    function removeSlot(slotId) {
+      if (challengeData.slots.length === 3 && !challengeData.dontShowMinSlotWarning) {
+        slotToRemoveId = slotId; // Store the slot ID for `handleMinSlotWarningResponse`
+        document.getElementById('minSlotWarningModal').style.display = 'flex';
+        return new Promise(resolve => {
+          resolveMinSlotWarningPromise = resolve;
+        }).then(proceed => {
+          if (proceed) {
+            performRemoveSlot(slotId);
+          } else {
+            // User cancelled, do nothing
+            renderGames();
+            saveData();
+          }
+        });
+      } else {
+        performRemoveSlot(slotId);
       }
-      const removed = challengeData.slots.pop();
-      // Stop timer if running
-      if (removed.timerInterval) clearInterval(removed.timerInterval);
+    }
+
+    function performRemoveSlot(slotId) {
+      if (challengeData.slots.length === 1) {
+        const slot = challengeData.slots[0];
+        // Clear the last card instead of deleting it
+        if (slot.timerInterval) clearInterval(slot.timerInterval);
+        Object.assign(slot, newSlot(slot.id)); // Reset to default state
+        showResult('Slot Cleared', 'You cannot remove the last slot. It has been cleared instead.');
+      } else {
+        const slotIndex = challengeData.slots.findIndex(s => s.id === slotId);
+        if (slotIndex === -1) return;
+
+        const removed = challengeData.slots.splice(slotIndex, 1)[0];
+        // Stop timer if running
+        if (removed.timerInterval) clearInterval(removed.timerInterval);
+        
+        // Reassign IDs based on new order and re-render
+        challengeData.slots = challengeData.slots.map((s, index) => ({ ...s, id: index + 1 }));
+        showResult('Slot Removed', `Removed slot ${slotId} from your rotation.`);
+      }
       renderGames();
-      showResult('Slot Removed', 'Removed the last slot from your rotation.');
+      saveData();
     }
 
     function updateGame(slotId, gameName) {
@@ -1078,10 +1611,23 @@
       const target = futureSlots[Math.floor(Math.random() * futureSlots.length)];
       const pool = challengeData.tempHandicaps[target.game] || [];
       if (pool.length > 0) {
-        const randomHandicap = pool[Math.floor(Math.random() * pool.length)];
-        target.temporaryHandicaps.push(randomHandicap);
-        renderGames();
-        showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>Temporary handicap added to ${escapeHtml(target.game)}:<br><strong>${escapeHtml(randomHandicap)}</strong>`);
+        // Filter out handicaps already present in the target slot
+        const availablePool = pool.filter(pHandicap => 
+          !target.temporaryHandicaps.some(sHandicap => 
+            sHandicap.name === pHandicap.name && sHandicap.description === pHandicap.description && sHandicap.rarity === pHandicap.rarity
+          )
+        );
+
+        const randomHandicap = getRandomWeightedHandicap(availablePool);
+        if (randomHandicap) {
+          target.temporaryHandicaps.push(randomHandicap);
+          renderGames();
+          const fullHandicapText = randomHandicap.name + (randomHandicap.description ? ' - ' + randomHandicap.description : '');
+          showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>Temporary handicap added to ${escapeHtml(target.game)}:<br><span class="${challengeData.rarityTiers[randomHandicap.rarity]?.colorClass || ''}"><strong>${escapeHtml(fullHandicapText)} (${randomHandicap.rarity})</strong></span>`);
+        } else {
+          renderGames();
+          showResult('Death Added', `Added a ${challengeData.deathSystemName === 'Deaths' ? 'death' : challengeData.deathSystemName.toLowerCase()} to ${escapeHtml(slot.game)}.<br>No unique temporary handicaps available for the target game, or all have zero weight.`);
+        }
         return;
       }
       renderGames();
@@ -1101,26 +1647,28 @@
         // Remove 2-3 random permanent handicaps from any game
         const numHandicapsToRemove = Math.floor(Math.random() * 2) + 2; // 2 or 3
         let handicapsRemovedCount = 0;
-        let availablePermHandicaps = [];
+        let allPermHandicapObjects = [];
         for (const game in challengeData.permHandicaps) {
-          challengeData.permHandicaps[game].forEach(h => availablePermHandicaps.push({ game, handicap: h }));
+          challengeData.permHandicaps[game].forEach(h => allPermHandicapObjects.push({ game, handicap: h }));
         }
 
         // Shuffle available handicaps to pick randomly
-        for (let i = availablePermHandicaps.length - 1; i > 0; i--) {
+        for (let i = allPermHandicapObjects.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [availablePermHandicaps[i], availablePermHandicaps[j]] = [availablePermHandicaps[j], availablePermHandicaps[i]];
+          [allPermHandicapObjects[i], allPermHandicapObjects[j]] = [allPermHandicapObjects[j], allPermHandicapObjects[i]];
         }
 
-        while (handicapsRemovedCount < numHandicapsToRemove && availablePermHandicaps.length > 0) {
-          const { game, handicap } = availablePermHandicaps.pop();
-          // Remove from any slots that might have this handicap
+        while (handicapsRemovedCount < numHandicapsToRemove && allPermHandicapObjects.length > 0) {
+          const { game, handicap } = allPermHandicapObjects.pop();
+          // Remove from any slots that might have this handicap object
           challengeData.slots.forEach(s => {
             if (s.game === game) {
-              s.permanentHandicaps = s.permanentHandicaps.filter(h => h !== handicap);
+              s.permanentHandicaps = s.permanentHandicaps.filter(hObj => 
+                !(hObj.name === handicap.name && hObj.description === handicap.description && hObj.rarity === handicap.rarity)
+              );
             }
           });
-          removedHandicapMessages.push(`Removed <strong>${escapeHtml(handicap)}</strong> from <strong>${escapeHtml(game)}</strong>`);
+          removedHandicapMessages.push(`<span class="${challengeData.rarityTiers[handicap.rarity]?.colorClass || ''}"><strong>${escapeHtml(handicap.name + (handicap.description ? ' - ' + handicap.description : ''))} (${handicap.rarity})</strong></span> from <strong>${escapeHtml(game)}</strong>`);
           handicapsRemovedCount++;
         }
       }
@@ -1147,23 +1695,39 @@
       showResult('Game Completed', message);
     }
 
-    function clearSpecificHandicap(slotId, type, handicap) {
+    function clearSpecificHandicap(slotId, type, handicapString) {
       const slot = challengeData.slots.find(s => s.id === slotId);
       if (!slot) return;
 
-      const confirmRemoval = window.confirm(`Are you sure you want to remove the ${type} handicap "${handicap.split(' - ')[0]}" from ${slot.game}?`);
+      const confirmRemoval = window.confirm(`Are you sure you want to remove the ${type} handicap "${handicapString.split(' - ')[0]}" from ${slot.game}?`);
       if (!confirmRemoval) return;
 
+      const handicapName = handicapString.split(' - ')[0];
+      const handicapDescription = handicapString.split(' - ').length > 1 ? handicapString.split(' - ').slice(1).join(' - ') : '';
+
       if (type === 'permanent') {
-        slot.permanentHandicaps = slot.permanentHandicaps.filter(h => h !== handicap);
+        slot.permanentHandicaps = slot.permanentHandicaps.filter(h => !(h.name === handicapName && h.description === handicapDescription));
       } else {
-        slot.temporaryHandicaps = slot.temporaryHandicaps.filter(h => h !== handicap);
+        slot.temporaryHandicaps = slot.temporaryHandicaps.filter(h => !(h.name === handicapName && h.description === handicapDescription));
       }
       renderGames();
-      showResult('Handicap Removed', `Removed ${escapeHtml(type)} handicap from ${escapeHtml(slot.game || 'slot')}:<br><strong>${escapeHtml(handicap)}</strong>`);
+      showResult('Handicap Removed', `Removed ${escapeHtml(type)} handicap from ${escapeHtml(slot.game || 'slot')}:<br><strong>${escapeHtml(handicapString)}</strong>`);
     }
 
     // Rolls
+    function getRandomWeightedHandicap(pool) {
+      let weightedList = [];
+      pool.forEach(handicap => {
+        const rarity = handicap.rarity || 'Common'; // Default to Common if rarity is missing
+        const weight = challengeData.rarityTiers[rarity]?.weight || challengeData.rarityTiers['Common'].weight; // Default to Common weight
+        for (let i = 0; i < weight; i++) {
+          weightedList.push(handicap);
+        }
+      });
+      if (weightedList.length === 0) return null;
+      return weightedList[Math.floor(Math.random() * weightedList.length)];
+    }
+
     function rollTempHandicap() {
       if (challengeData.disableAutomatedHandicapGains) {
         showResult('Automated Gains Disabled', 'Automated temporary handicap gains are currently disabled in settings.');
@@ -1181,10 +1745,22 @@
         showResult('No Handicaps', `No temporary handicaps found for ${escapeHtml(slot.game)}.`);
         return;
       }
-      const pick = pool[Math.floor(Math.random() * pool.length)];
-      slot.temporaryHandicaps.push(pick);
-      renderGames();
-      showResult('Temporary Handicap', `Added to ${escapeHtml(slot.game)}:<br><strong>${escapeHtml(pick)}</strong>`);
+      // Filter out handicaps already present in the slot
+      const availablePool = pool.filter(pHandicap => 
+        !slot.temporaryHandicaps.some(sHandicap => 
+          sHandicap.name === pHandicap.name && sHandicap.description === pHandicap.description && sHandicap.rarity === pHandicap.rarity
+        )
+      );
+
+      const pick = getRandomWeightedHandicap(availablePool);
+      if (pick) {
+        slot.temporaryHandicaps.push(pick);
+        renderGames();
+        const fullHandicapText = pick.name + (pick.description ? ' - ' + pick.description : '');
+        showResult('Temporary Handicap', `Added to ${escapeHtml(slot.game)}:<br><span class="${challengeData.rarityTiers[pick.rarity]?.colorClass || ''}"><strong>${escapeHtml(fullHandicapText)} (${pick.rarity})</strong></span>`);
+      } else {
+        showResult('No Handicaps', `No unique temporary handicaps available for ${escapeHtml(slot.game)}, or all have zero weight.`);
+      }
     }
 
     function rollPermHandicap() {
@@ -1198,8 +1774,12 @@
         return;
       }
       const slot = eligible[Math.floor(Math.random() * eligible.length)];
-      if (slot.permanentHandicaps.length >= 3) {
-        showResult('Max Handicaps', `${escapeHtml(slot.game)} already has the maximum of 3 permanent handicaps.`);
+      const maxPermHandicaps = challengeData.customMaxPermHandicapsEnabled
+        ? (challengeData.gameSettings[slot.game]?.maxPermHandicaps || 3)
+        : 3; // Always 3 if custom max perm handicaps are disabled
+
+      if (slot.permanentHandicaps.length >= maxPermHandicaps) {
+        showResult('Max Handicaps', `${escapeHtml(slot.game)} already has the maximum of ${maxPermHandicaps} permanent handicaps.`);
         return;
       }
       const pool = challengeData.permHandicaps[slot.game] || [];
@@ -1212,10 +1792,15 @@
         showResult('All Applied', `All available permanent handicaps have already been applied to ${escapeHtml(slot.game)}.`);
         return;
       }
-      const pick = available[Math.floor(Math.random() * available.length)];
-      slot.permanentHandicaps.push(pick);
-      renderGames();
-      showResult('Permanent Handicap', `Added to ${escapeHtml(slot.game)}:<br><strong>${escapeHtml(pick)}</strong>`);
+      const pick = getRandomWeightedHandicap(available);
+      if (pick) {
+        slot.permanentHandicaps.push(pick);
+        renderGames();
+        const fullHandicapText = pick.name + (pick.description ? ' - ' + pick.description : '');
+        showResult('Permanent Handicap', `Added to ${escapeHtml(slot.game)}:<br><span class="${challengeData.rarityTiers[pick.rarity]?.colorClass || ''}"><strong>${escapeHtml(fullHandicapText)} (${pick.rarity})</strong></span>`);
+      } else {
+        showResult('No Handicaps', `No permanent handicaps available or all have zero weight for ${escapeHtml(slot.game)}.`);
+      }
     }
 
     function completeRotation() {
@@ -1242,8 +1827,11 @@
         // Prepare a list of slots that are truly eligible to receive a new permanent handicap
         let trulyEligibleTargets = [];
         challengeData.slots.forEach(slot => {
-          // A slot is eligible if it has a game, is not completed, and has less than 3 permanent handicaps
-          if (slot.game && slot.progress !== 'Completed' && slot.permanentHandicaps.length < 3) {
+          const maxPermHandicapsForSlot = challengeData.customMaxPermHandicapsEnabled
+            ? (challengeData.gameSettings[slot.game]?.maxPermHandicaps || 3)
+            : 3;
+          // A slot is eligible if it has a game, is not completed, and has less than its max permanent handicaps
+          if (slot.game && slot.progress !== 'Completed' && slot.permanentHandicaps.length < maxPermHandicapsForSlot) {
             const permPool = challengeData.permHandicaps[slot.game] || [];
             // Filter the pool to find handicaps not already active on this slot
             const availablePerms = permPool.filter(h => !slot.permanentHandicaps.includes(h));
@@ -1260,10 +1848,15 @@
           const randomTargetIndex = Math.floor(Math.random() * trulyEligibleTargets.length);
           const { slot: targetSlot, availablePerms } = trulyEligibleTargets[randomTargetIndex];
 
-          // Pick a random available handicap for that target slot
-          const newPermHandicap = availablePerms[Math.floor(Math.random() * availablePerms.length)];
-          targetSlot.permanentHandicaps.push(newPermHandicap);
-          addedPermHandicapMessage = `<br>New permanent handicap added to ${escapeHtml(targetSlot.game)}:<br><strong>${escapeHtml(newPermHandicap)}</strong>`;
+          // Pick a random available handicap for that target slot using weighted selection
+          const newPermHandicap = getRandomWeightedHandicap(availablePerms);
+          if (newPermHandicap) {
+            targetSlot.permanentHandicaps.push(newPermHandicap);
+            const fullHandicapText = newPermHandicap.name + (newPermHandicap.description ? ' - ' + newPermHandicap.description : '');
+            addedPermHandicapMessage = `<br>New permanent handicap added to ${escapeHtml(targetSlot.game)}:<br><span class="${challengeData.rarityTiers[newPermHandicap.rarity]?.colorClass || ''}"><strong>${escapeHtml(fullHandicapText)} (${newPermHandicap.rarity})</strong></span>`;
+          } else {
+            addedPermHandicapMessage = `<br>No permanent handicaps available or all have zero weight for any eligible game.`;
+          }
         } else {
           // This message only appears if NO slots are truly eligible across the entire rotation
           addedPermHandicapMessage = `<br>No active game slots could receive a new permanent handicap this rotation. All eligible games either have their maximum handicaps, or all available handicaps from their database pool are already active on them.`;
@@ -1294,9 +1887,9 @@
         challengeData.tokens++;
         renderGames();
         updateTokenButton();
-        showResult('Token Awarded!', 'Congratulations! You earned a token.<br>You can use it to clear one permanent handicap (max once per rotation).');
+        showResult('Token Awarded!', `Congratulations! You earned a token by rolling an ${challengeData.achievementSystemName.toLowerCase()}.<br>You can use it to clear one permanent handicap (max once per rotation).`);
       } else {
-        showResult('No Token', 'No token awarded this time. Keep going!');
+        showResult(`No ${challengeData.achievementSystemName}`, `No ${challengeData.achievementSystemName.toLowerCase()} awarded this time. Keep going!`);
       }
     }
 
@@ -1321,7 +1914,8 @@
       challengeData.tokenUsedThisRotation = true;
       renderGames();
       updateTokenButton();
-      showResult('Token Used', `Cleared a permanent handicap from ${escapeHtml(slot.game)}:<br><strong>${escapeHtml(pick)}</strong>`);
+      const fullHandicapText = pick.name + (pick.description ? ' - ' + pick.description : '');
+      showResult('Token Used', `Cleared a permanent handicap from ${escapeHtml(slot.game)}:<br><span class="${challengeData.rarityTiers[pick.rarity]?.colorClass || ''}"><strong>${escapeHtml(fullHandicapText)} (${pick.rarity})</strong></span>`);
     }
 
     // Timer
@@ -1480,15 +2074,18 @@
               <button class="btn-primary btn-sm" onclick="toggleHandicapList(this)"><i class="fas fa-minus"></i></button>
             </div>
           </div>
+          <div class="db-game-settings" style="font-size: 0.9em; color: var(--gray); margin-bottom: 10px;">
+            Max Perm. Handicaps: ${challengeData.gameSettings[game]?.maxPermHandicaps || 3}
+          </div>
           <div class="handicap-list">
             <h4>Permanent Handicaps</h4>
             ${perm.length > 0
               ? perm.map(h => `
-                  <div class="db-handicap permanent" data-game="${escapeAttr(game)}" data-type="permanent" data-handicap="${escapeAttr(h)}">
-                    <span>${escapeHtml(h)}</span>
+                  <div class="db-handicap permanent" data-game="${escapeAttr(game)}" data-type="permanent" data-handicap="${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}">
+                    <span class="${challengeData.rarityTiers[h.rarity]?.colorClass || ''}">${escapeHtml(h.name + (h.description ? ' - ' + h.description : ''))} (${h.rarity})</span>
                     <div class="handicap-actions">
-                      <button class="handicap-btn" title="Edit" onclick="showEditHandicapModal('${escapeAttr(game)}', 'permanent', '${escapeAttr(h)}')"><i class="fas fa-edit"></i></button>
-                      <button class="handicap-btn" title="Delete" onclick="deleteHandicap('${escapeAttr(game)}', 'permanent', '${escapeAttr(h)}')"><i class="fas fa-times"></i></button>
+                      <button class="handicap-btn" title="Edit" onclick="showEditHandicapModal('${escapeAttr(game)}', 'permanent', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')"><i class="fas fa-edit"></i></button>
+                      <button class="handicap-btn" title="Delete" onclick="deleteHandicap('${escapeAttr(game)}', 'permanent', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')"><i class="fas fa-times"></i></button>
                     </div>
                   </div>`)
               .join('')
@@ -1496,11 +2093,11 @@
             <h4>Temporary Handicaps</h4>
             ${temp.length > 0
               ? temp.map(h => `
-                  <div class="db-handicap temporary" data-game="${escapeAttr(game)}" data-type="temporary" data-handicap="${escapeAttr(h)}">
-                    <span>${escapeHtml(h)}</span>
+                  <div class="db-handicap temporary" data-game="${escapeAttr(game)}" data-type="temporary" data-handicap="${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}">
+                    <span class="${challengeData.rarityTiers[h.rarity]?.colorClass || ''}">${escapeHtml(h.name + (h.description ? ' - ' + h.description : ''))} (${h.rarity})</span>
                     <div class="handicap-actions">
-                      <button class="handicap-btn" title="Edit" onclick="showEditHandicapModal('${escapeAttr(game)}', 'temporary', '${escapeAttr(h)}')"><i class="fas fa-edit"></i></button>
-                      <button class="handicap-btn" title="Delete" onclick="deleteHandicap('${escapeAttr(game)}', 'temporary', '${escapeAttr(h)}')"><i class="fas fa-times"></i></button>
+                      <button class="handicap-btn" title="Edit" onclick="showEditHandicapModal('${escapeAttr(game)}', 'temporary', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')"><i class="fas fa-edit"></i></button>
+                      <button class="handicap-btn" title="Delete" onclick="deleteHandicap('${escapeAttr(game)}', 'temporary', '${escapeAttr(h.name + (h.description ? ' - ' + h.description : ''))}')"><i class="fas fa-times"></i></button>
                     </div>
                   </div>`)
               .join('')
@@ -1531,6 +2128,21 @@
       document.getElementById('handicapDescription').value = '';
       document.getElementById('bulkHandicaps').value = ''; // Clear bulk input
       document.getElementById('addHandicapModal').style.display = 'flex';
+      // Conditionally show/hide maxPermHandicapsGroup
+      const maxPermHandicapsGroup = document.getElementById('maxPermHandicapsGroup');
+      if (maxPermHandicapsGroup) {
+        maxPermHandicapsGroup.style.display = challengeData.customMaxPermHandicapsEnabled ? 'block' : 'none';
+      }
+      // Populate rarity dropdown
+      const raritySelect = document.getElementById('handicapRarity');
+      raritySelect.innerHTML = '';
+      for (const rarity in challengeData.rarityTiers) {
+        const option = document.createElement('option');
+        option.value = rarity;
+        option.textContent = rarity;
+        raritySelect.appendChild(option);
+      }
+      raritySelect.value = 'Common'; // Default to Common
     }
 
     function addNewHandicap() {
@@ -1540,11 +2152,17 @@
       const type = document.getElementById('handicapType').value;
       const name = document.getElementById('handicapName').value.trim();
       const description = document.getElementById('handicapDescription').value.trim();
+      const maxPermHandicaps = parseInt(document.getElementById('maxPermHandicapsInput').value);
       const bulkInput = document.getElementById('bulkHandicaps').value.trim();
       const handicapsToAdd = bulkInput.split('\n').map(h => h.trim()).filter(h => h);
+      const rarity = document.getElementById('handicapRarity').value; // Get selected rarity
 
       if (!gameName || !name) {
         alert('Please select or enter a game, and provide a handicap name.');
+        return;
+      }
+      if (isNaN(maxPermHandicaps) || maxPermHandicaps < 1) {
+        alert('Please enter a valid number (at least 1) for Max Permanent Handicaps.');
         return;
       }
 
@@ -1553,22 +2171,29 @@
       }
       if (!challengeData.permHandicaps[gameName]) challengeData.permHandicaps[gameName] = [];
       if (!challengeData.tempHandicaps[gameName]) challengeData.tempHandicaps[gameName] = [];
+      // Initialize or update game settings
+      if (!challengeData.gameSettings[gameName]) {
+        challengeData.gameSettings[gameName] = { maxPermHandicaps: challengeData.customMaxPermHandicapsEnabled ? maxPermHandicaps : 3 };
+      } else if (challengeData.gameSettings[gameName].maxPermHandicaps !== (challengeData.customMaxPermHandicapsEnabled ? maxPermHandicaps : 3)) {
+        challengeData.gameSettings[gameName].maxPermHandicaps = challengeData.customMaxPermHandicapsEnabled ? maxPermHandicaps : 3;
+      }
 
       const full = description ? `${name} - ${description}` : name;
+      const handicapObject = { name: name, description: description, rarity: rarity };
       if (type === 'permanent') {
-        challengeData.permHandicaps[gameName].push(full);
+        challengeData.permHandicaps[gameName].push(handicapObject);
       } else {
-        challengeData.tempHandicaps[gameName].push(full);
+        challengeData.tempHandicaps[gameName].push(handicapObject);
       }
 
       // Add bulk handicaps if any
       handicapsToAdd.forEach(h => {
         const [handicapName, handicapDesc] = h.split(' - ');
-        const fullHandicap = handicapDesc ? `${handicapName} - ${handicapDesc}` : handicapName;
+        const bulkHandicapObject = { name: handicapName, description: handicapDesc || '', rarity: rarity };
         if (type === 'permanent') {
-          challengeData.permHandicaps[gameName].push(fullHandicap);
+          challengeData.permHandicaps[gameName].push(bulkHandicapObject);
         } else {
-          challengeData.tempHandicaps[gameName].push(fullHandicap);
+          challengeData.tempHandicaps[gameName].push(bulkHandicapObject);
         }
       });
 
@@ -1584,11 +2209,17 @@
       const gameInput = document.getElementById('dbGameName').value.trim();
       const gameName = gameInput || gameSelect;
       const type = document.getElementById('handicapType').value;
+      const maxPermHandicaps = parseInt(document.getElementById('maxPermHandicapsInput').value);
       const bulkText = document.getElementById('bulkHandicaps').value.trim();
       const handicaps = bulkText.split('\n').map(h => h.trim()).filter(h => h); // Split by newline, trim whitespace, filter out empty lines
+      const rarity = document.getElementById('handicapRarity').value; // Get selected rarity
 
       if (!gameName || handicaps.length === 0) {
         alert('Please select a game and enter at least one handicap.');
+        return;
+      }
+      if (isNaN(maxPermHandicaps) || maxPermHandicaps < 1) {
+        alert('Please enter a valid number (at least 1) for Max Permanent Handicaps.');
         return;
       }
 
@@ -1597,18 +2228,26 @@
       }
       if (!challengeData.permHandicaps[gameName]) challengeData.permHandicaps[gameName] = [];
       if (!challengeData.tempHandicaps[gameName]) challengeData.tempHandicaps[gameName] = [];
+      // Initialize or update game settings
+      if (!challengeData.gameSettings[gameName]) {
+        challengeData.gameSettings[gameName] = { maxPermHandicaps: maxPermHandicaps };
+      } else if (challengeData.gameSettings[gameName].maxPermHandicaps !== maxPermHandicaps) {
+        challengeData.gameSettings[gameName].maxPermHandicaps = maxPermHandicaps;
+      }
 
       const addedHandicaps = [];
       for (const h of handicaps) {
         const full = h; // No description for bulk add
+        const handicapObject = { name: h.split(' - ')[0], description: h.split(' - ').length > 1 ? h.split(' - ').slice(1).join(' - ') : '', rarity: rarity };
         if (type === 'permanent') {
-          if (!challengeData.permHandicaps[gameName].includes(full)) {
-            challengeData.permHandicaps[gameName].push(full);
+          // Check for duplicate handicap objects based on name and description (and rarity for strict uniqueness)
+          if (!challengeData.permHandicaps[gameName].some(existing => existing.name === handicapObject.name && existing.description === handicapObject.description && existing.rarity === handicapObject.rarity)) {
+            challengeData.permHandicaps[gameName].push(handicapObject);
             addedHandicaps.push(`<strong>${escapeHtml(full)}</strong>`);
           }
         } else {
-          if (!challengeData.tempHandicaps[gameName].includes(full)) {
-            challengeData.tempHandicaps[gameName].push(full);
+          if (!challengeData.tempHandicaps[gameName].some(existing => existing.name === handicapObject.name && existing.description === handicapObject.description && existing.rarity === handicapObject.rarity)) {
+            challengeData.tempHandicaps[gameName].push(handicapObject);
             addedHandicaps.push(`<strong>${escapeHtml(full)}</strong>`);
           }
         }
@@ -1648,12 +2287,33 @@
       document.getElementById('editHandicapName').value = parts[0];
       document.getElementById('editHandicapDescription').value = parts.length > 1 ? parts.slice(1).join(' - ') : '';
       document.getElementById('editHandicapModal').style.display = 'flex';
+
+      // Populate rarity dropdown for edit modal
+      const editRaritySelect = document.getElementById('editHandicapRarity');
+      editRaritySelect.innerHTML = '';
+      for (const r in challengeData.rarityTiers) {
+        const option = document.createElement('option');
+        option.value = r;
+        option.textContent = r;
+        editRaritySelect.appendChild(option);
+      }
+      // Find the handicap object to get its rarity
+      const originalHandicapObject = (type === 'permanent' ? challengeData.permHandicaps[gameName] : challengeData.tempHandicaps[gameName])
+                             .find(h => (h.name + (h.description ? ' - ' + h.description : '')) === handicap);
+      if (originalHandicapObject) {
+        editRaritySelect.value = originalHandicapObject.rarity;
+        document.getElementById('originalEditHandicapRarity').value = originalHandicapObject.rarity;
+      } else {
+        editRaritySelect.value = 'Common'; // Default if not found or old format
+        document.getElementById('originalEditHandicapRarity').value = 'Common';
+      }
     }
 
     function saveEditedHandicap() {
       const originalGameName = document.getElementById('originalEditGameName').value;
       const originalHandicapType = document.getElementById('originalEditHandicapType').value;
-      const originalHandicap = document.getElementById('originalEditHandicap').value;
+      const originalHandicapString = document.getElementById('originalEditHandicap').value;
+      const originalHandicapRarity = document.getElementById('originalEditHandicapRarity').value;
 
       const newGameSelect = document.getElementById('editGameSelect').value.trim();
       const newGameInput = document.getElementById('editGameName').value.trim();
@@ -1661,19 +2321,29 @@
       const newHandicapType = document.getElementById('editHandicapType').value;
       const newHandicapName = document.getElementById('editHandicapName').value.trim();
       const newHandicapDescription = document.getElementById('editHandicapDescription').value.trim();
+      const newHandicapRarity = document.getElementById('editHandicapRarity').value;
 
       if (!newGameName || !newHandicapName) {
         alert('Please select or enter a game, and provide a handicap name.');
         return;
       }
 
-      const newFullHandicap = newHandicapDescription ? `${newHandicapName} - ${newHandicapDescription}` : newHandicapName;
+      const newFullHandicapString = newHandicapDescription ? `${newHandicapName} - ${newHandicapDescription}` : newHandicapName;
+      const newHandicapObject = { name: newHandicapName, description: newHandicapDescription, rarity: newHandicapRarity };
 
-      // Remove old handicap
+      // Reconstruct original handicap object for filtering
+      const originalHandicapParts = originalHandicapString.split(' - ');
+      const originalHandicapObject = { name: originalHandicapParts[0], description: originalHandicapParts.length > 1 ? originalHandicapParts.slice(1).join(' - ') : '', rarity: originalHandicapRarity };
+
+      // Remove old handicap using object comparison
       if (originalHandicapType === 'permanent') {
-        challengeData.permHandicaps[originalGameName] = challengeData.permHandicaps[originalGameName].filter(h => h !== originalHandicap);
+        challengeData.permHandicaps[originalGameName] = challengeData.permHandicaps[originalGameName].filter(h => 
+          !(h.name === originalHandicapObject.name && h.description === originalHandicapObject.description && h.rarity === originalHandicapObject.rarity)
+        );
       } else {
-        challengeData.tempHandicaps[originalGameName] = challengeData.tempHandicaps[originalGameName].filter(h => h !== originalHandicap);
+        challengeData.tempHandicaps[originalGameName] = challengeData.tempHandicaps[originalGameName].filter(h => 
+          !(h.name === originalHandicapObject.name && h.description === originalHandicapObject.description && h.rarity === originalHandicapObject.rarity)
+        );
       }
 
       // Add new game to database if it doesn't exist
@@ -1683,16 +2353,18 @@
       if (!challengeData.permHandicaps[newGameName]) challengeData.permHandicaps[newGameName] = [];
       if (!challengeData.tempHandicaps[newGameName]) challengeData.tempHandicaps[newGameName] = [];
 
-      // Add new handicap
+      // Add new handicap, avoiding duplicates in the new game's pool based on name, description, and rarity
       if (newHandicapType === 'permanent') {
-        // Avoid duplicates in the new game's pool
-        if (!challengeData.permHandicaps[newGameName].includes(newFullHandicap)) {
-          challengeData.permHandicaps[newGameName].push(newFullHandicap);
+        if (!challengeData.permHandicaps[newGameName].some(existing => 
+          existing.name === newHandicapObject.name && existing.description === newHandicapObject.description && existing.rarity === newHandicapObject.rarity
+        )) {
+          challengeData.permHandicaps[newGameName].push(newHandicapObject);
         }
       } else {
-        // Avoid duplicates in the new game's pool
-        if (!challengeData.tempHandicaps[newGameName].includes(newFullHandicap)) {
-          challengeData.tempHandicaps[newGameName].push(newFullHandicap);
+        if (!challengeData.tempHandicaps[newGameName].some(existing => 
+          existing.name === newHandicapObject.name && existing.description === newHandicapObject.description && existing.rarity === newHandicapObject.rarity
+        )) {
+          challengeData.tempHandicaps[newGameName].push(newHandicapObject);
         }
       }
 
@@ -1700,27 +2372,33 @@
       renderDatabase();
       renderGames(); // updates dropdowns and slot handicaps
       saveData();
-      showResult('Handicap Updated', `Updated <strong>${escapeHtml(newHandicapType)}</strong> handicap for <strong>${escapeHtml(newGameName)}</strong>:<br><strong>${escapeHtml(newFullHandicap)}</strong>`);
+      showResult('Handicap Updated', `Updated <strong>${escapeHtml(newHandicapType)}</strong> handicap for <strong>${escapeHtml(newGameName)}</strong>:<br><strong>${escapeHtml(newFullHandicapString)}</strong>`);
     }
 
     // Delete Handicap
-    function deleteHandicap(gameName, type, handicap) {
-      const confirm = window.confirm(`Are you sure you want to delete the "${escapeHtml(handicap.split(' - ')[0])}" handicap from ${escapeHtml(gameName)}? This action cannot be undone.`);
+    function deleteHandicap(gameName, type, handicapString) {
+      const confirm = window.confirm(`Are you sure you want to delete the "${escapeHtml(handicapString.split(' - ')[0])}" handicap from ${escapeHtml(gameName)}? This action cannot be undone.`);
       if (!confirm) return;
 
+      // Find the handicap object to delete
+      const handicapToDeleteName = handicapString.split(' - ')[0];
+      const handicapToDeleteDescription = handicapString.split(' - ').length > 1 ? handicapString.split(' - ').slice(1).join(' - ') : '';
+
+      // NOTE: We cannot rely on rarity for deletion here as we don't pass it from the UI call directly.
+      // We'll filter based on name and description, which should be sufficiently unique for deletion.
       if (type === 'permanent') {
-        challengeData.permHandicaps[gameName] = challengeData.permHandicaps[gameName].filter(h => h !== handicap);
+        challengeData.permHandicaps[gameName] = challengeData.permHandicaps[gameName].filter(h => !(h.name === handicapToDeleteName && h.description === handicapToDeleteDescription));
       } else {
-        challengeData.tempHandicaps[gameName] = challengeData.tempHandicaps[gameName].filter(h => h !== handicap);
+        challengeData.tempHandicaps[gameName] = challengeData.tempHandicaps[gameName].filter(h => !(h.name === handicapToDeleteName && h.description === handicapToDeleteDescription));
       }
 
       // Also remove from any slots that might have this handicap
       challengeData.slots.forEach(slot => {
         if (slot.game === gameName) {
           if (type === 'permanent') {
-            slot.permanentHandicaps = slot.permanentHandicaps.filter(h => h !== handicap);
+            slot.permanentHandicaps = slot.permanentHandicaps.filter(h => !(h.name === handicapToDeleteName && h.description === handicapToDeleteDescription));
           } else {
-            slot.temporaryHandicaps = slot.temporaryHandicaps.filter(h => h !== handicap);
+            slot.temporaryHandicaps = slot.temporaryHandicaps.filter(h => !(h.name === handicapToDeleteName && h.description === handicapToDeleteDescription));
           }
         }
       });
@@ -1729,7 +2407,7 @@
       renderDatabase();
       renderGames(); // updates dropdowns if new game
       saveData();
-      showResult('Handicap Deleted', `Deleted <strong>${escapeHtml(type)}</strong> handicap from <strong>${escapeHtml(gameName)}</strong>:<br><strong>${escapeHtml(handicap)}</strong>`);
+      showResult('Handicap Deleted', `Deleted <strong>${escapeHtml(type)}</strong> handicap from <strong>${escapeHtml(gameName)}</strong>:<br><strong>${escapeHtml(handicapString)}</strong>`);
     }
 
     // Reset progress (not database)
@@ -1781,17 +2459,145 @@
       challengeData[key] = value;
       saveData();
       renderSettings(); // Re-render settings to reflect potential changes (e.g., checkbox state)
+      if (key === 'deathSystemName') {
+        // If deathSystemName changes, update the stat item title
+        document.getElementById('totalDeathsLabel').textContent = `${challengeData.deathSystemName}:`;
+      }
+    }
+
+    // New function to handle toggle settings UI
+    function toggleSettingUI(key) {
+      challengeData[key] = !challengeData[key]; // Toggle the boolean value
+      updateSetting(key, challengeData[key]); // Use existing updateSetting to save and re-render
     }
 
     // Render settings page
     function renderSettings() {
       document.getElementById('tokenDropRateInput').value = (challengeData.tokenDropRate * 100).toFixed(0);
       document.getElementById('permClearChanceInput').value = (challengeData.permClearChance * 100).toFixed(0);
-      document.getElementById('manualHandicapsToggle').checked = challengeData.manualHandicapsEnabled;
+
+      // Handle Manual Handicaps Toggle
+      const manualHandicapsToggleContainer = document.getElementById('manualHandicapsToggleContainer');
+      if (manualHandicapsToggleContainer) {
+        if (challengeData.manualHandicapsEnabled) {
+          manualHandicapsToggleContainer.classList.add('is-on');
+          manualHandicapsToggleContainer.classList.remove('is-off');
+          manualHandicapsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'ON';
+        } else {
+          manualHandicapsToggleContainer.classList.add('is-off');
+          manualHandicapsToggleContainer.classList.remove('is-on');
+          manualHandicapsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'OFF';
+        }
+      }
+      
       document.getElementById('deathSystemNameInput').value = challengeData.deathSystemName;
-      document.getElementById('disableAutomatedHandicapGainsToggle').checked = challengeData.disableAutomatedHandicapGains;
-      document.getElementById('disableAutomatedHandicapRemovalsToggle').checked = challengeData.disableAutomatedHandicapRemovals;
-      // Additional settings can be added here
+      document.getElementById('achievementSystemNameInput').value = challengeData.achievementSystemName; // Populate new input
+
+      // Handle Disable Automated Handicap Gains Toggle
+      const disableAutomatedHandicapGainsToggleContainer = document.getElementById('disableAutomatedHandicapGainsToggleContainer');
+      if (disableAutomatedHandicapGainsToggleContainer) {
+        if (challengeData.disableAutomatedHandicapGains) {
+          disableAutomatedHandicapGainsToggleContainer.classList.add('is-on');
+          disableAutomatedHandicapGainsToggleContainer.classList.remove('is-off');
+          disableAutomatedHandicapGainsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'ON';
+        } else {
+          disableAutomatedHandicapGainsToggleContainer.classList.add('is-off');
+          disableAutomatedHandicapGainsToggleContainer.classList.remove('is-on');
+          disableAutomatedHandicapGainsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'OFF';
+        }
+      }
+      // Old checkbox removal
+      // document.getElementById('disableAutomatedHandicapGainsToggle').checked = challengeData.disableAutomatedHandicapGains;
+
+      // Handle Disable Automated Handicap Removals Toggle
+      const disableAutomatedHandicapRemovalsToggleContainer = document.getElementById('disableAutomatedHandicapRemovalsToggleContainer');
+      if (disableAutomatedHandicapRemovalsToggleContainer) {
+        if (challengeData.disableAutomatedHandicapRemovals) {
+          disableAutomatedHandicapRemovalsToggleContainer.classList.add('is-on');
+          disableAutomatedHandicapRemovalsToggleContainer.classList.remove('is-off');
+          disableAutomatedHandicapRemovalsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'ON';
+        } else {
+          disableAutomatedHandicapRemovalsToggleContainer.classList.add('is-off');
+          disableAutomatedHandicapRemovalsToggleContainer.classList.remove('is-on');
+          disableAutomatedHandicapRemovalsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'OFF';
+        }
+      }
+      // Old checkbox removal
+      // document.getElementById('disableAutomatedHandicapRemovalsToggle').checked = challengeData.disableAutomatedHandicapRemovals;
+
+      // Handle Custom Max Permanent Handicaps Toggle
+      const customMaxPermHandicapsToggleContainer = document.getElementById('customMaxPermHandicapsToggleContainer');
+      if (customMaxPermHandicapsToggleContainer) {
+        if (challengeData.customMaxPermHandicapsEnabled) {
+          customMaxPermHandicapsToggleContainer.classList.add('is-on');
+          customMaxPermHandicapsToggleContainer.classList.remove('is-off');
+          customMaxPermHandicapsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'ON';
+        } else {
+          customMaxPermHandicapsToggleContainer.classList.add('is-off');
+          customMaxPermHandicapsToggleContainer.classList.remove('is-on');
+          customMaxPermHandicapsToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'OFF';
+        }
+      }
+      // Old checkbox removal
+      // document.getElementById('customMaxPermHandicapsToggle').checked = challengeData.customMaxPermHandicapsEnabled;
+
+      // Handle Dont Show Min Slot Warning Toggle
+      const dontShowMinSlotWarningToggleContainer = document.getElementById('dontShowMinSlotWarningToggleContainer');
+      if (dontShowMinSlotWarningToggleContainer) {
+        if (challengeData.dontShowMinSlotWarning) {
+          dontShowMinSlotWarningToggleContainer.classList.add('is-on');
+          dontShowMinSlotWarningToggleContainer.classList.remove('is-off');
+          dontShowMinSlotWarningToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'ON';
+        } else {
+          dontShowMinSlotWarningToggleContainer.classList.add('is-off');
+          dontShowMinSlotWarningToggleContainer.classList.remove('is-on');
+          dontShowMinSlotWarningToggleContainer.querySelector('.setting-toggle-indicator').textContent = 'OFF';
+        }
+      }
+      
+      // Update rules tab achievement references
+      const rulesAchievementsTitle = document.getElementById('rulesAchievementsTitle');
+      if (rulesAchievementsTitle) rulesAchievementsTitle.textContent = challengeData.achievementSystemName + 's';
+
+      const rulesAchievementText1 = document.getElementById('rulesAchievementText1');
+      if (rulesAchievementText1) rulesAchievementText1.textContent = challengeData.achievementSystemName.toLowerCase();
+
+      const settingsAchievementDropRateLabel = document.getElementById('settingsAchievementDropRateLabel');
+      if (settingsAchievementDropRateLabel) settingsAchievementDropRateLabel.textContent = challengeData.achievementSystemName;
+
+      const settingsAchievementHint1 = document.getElementById('settingsAchievementHint1');
+      if (settingsAchievementHint1) {
+        settingsAchievementHint1.innerHTML = `Every instance of "<strong>${challengeData.achievementSystemName.toLowerCase()}</strong>" has this chance to grant a token.`;
+      }
+
+      // Render Rarity Settings
+      const raritySettingsContainer = document.getElementById('raritySettingsContainer');
+      raritySettingsContainer.innerHTML = '';
+
+      for (const rarityName in challengeData.rarityTiers) {
+        const rarity = challengeData.rarityTiers[rarityName];
+        const settingGroup = document.createElement('div');
+        settingGroup.className = 'form-group';
+        settingGroup.innerHTML = `
+          <label for="rarityWeightInput-${rarityName}">${rarityName} Weight</label>
+          <input type="number" id="rarityWeightInput-${rarityName}" min="0" step="0.1" value="${rarity.weight}" onchange="updateRarityWeight('${rarityName}', this.value)" />
+          <p class="hint">Adjust the likelihood of ${rarityName} handicaps appearing. Higher value = more likely.</p>
+        `;
+        raritySettingsContainer.appendChild(settingGroup);
+      }
+    }
+
+    function updateRarityWeight(rarityName, value) {
+      const newWeight = parseFloat(value);
+      if (!isNaN(newWeight) && newWeight >= 0) {
+        challengeData.rarityTiers[rarityName].weight = newWeight;
+        saveData();
+        // No need to re-render settings completely, just save the change.
+      } else {
+        alert('Please enter a valid non-negative number for rarity weight.');
+        // Revert the input field to its previous valid value
+        document.getElementById(`rarityWeightInput-${rarityName}`).value = challengeData.rarityTiers[rarityName].weight;
+      }
     }
 
     // Modular Rules Page Toggle
@@ -1826,22 +2632,39 @@
     function showEditGameModal(gameName) {
       document.getElementById('originalGameName').value = gameName;
       document.getElementById('editedGameName').value = gameName;
+      // Set the max perm handicaps for the edited game
+      const maxPermHandicaps = (challengeData.gameSettings[gameName] && challengeData.gameSettings[gameName].maxPermHandicaps !== undefined)
+        ? challengeData.gameSettings[gameName].maxPermHandicaps
+        : 3; // Default to 3 if not set
+      document.getElementById('editedMaxPermHandicaps').value = maxPermHandicaps;
+
       document.getElementById('editGameModal').style.display = 'flex';
+
+      // Conditionally show/hide maxPermHandicaps input
+      const maxPermHandicapsEditGroup = document.querySelector('#editGameModal #editedMaxPermHandicaps').closest('.form-group');
+      if (maxPermHandicapsEditGroup) {
+        maxPermHandicapsEditGroup.style.display = challengeData.customMaxPermHandicapsEnabled ? 'block' : 'none';
+      }
     }
 
     function saveEditedGame() {
       const originalGameName = document.getElementById('originalGameName').value;
       const newGameName = document.getElementById('editedGameName').value.trim();
+      const newMaxPermHandicaps = parseInt(document.getElementById('editedMaxPermHandicaps').value);
 
       if (!newGameName) {
         alert('Game name cannot be empty.');
         return;
       }
-      if (newGameName === originalGameName) {
+      if (isNaN(newMaxPermHandicaps) || newMaxPermHandicaps < 1) {
+        alert('Please enter a valid number (at least 1) for Max Permanent Handicaps.');
+        return;
+      }
+      if (newGameName === originalGameName && newMaxPermHandicaps === (challengeData.gameSettings[originalGameName]?.maxPermHandicaps || 3)) {
         closeModal('editGameModal');
         return;
       }
-      if (challengeData.gameDatabase.includes(newGameName)) {
+      if (newGameName !== originalGameName && challengeData.gameDatabase.includes(newGameName)) {
         alert('A game with this name already exists.');
         return;
       }
@@ -1857,6 +2680,16 @@
       delete challengeData.permHandicaps[originalGameName];
       challengeData.tempHandicaps[newGameName] = challengeData.tempHandicaps[originalGameName] || [];
       delete challengeData.tempHandicaps[originalGameName];
+
+      // Update game settings
+      challengeData.gameSettings[newGameName] = {
+        maxPermHandicaps: challengeData.customMaxPermHandicapsEnabled ? newMaxPermHandicaps : 3,
+        ...(challengeData.gameSettings[originalGameName] ? { ...challengeData.gameSettings[originalGameName] } : {}),
+      };
+      // If game name changed, delete old settings
+      if (newGameName !== originalGameName) {
+        delete challengeData.gameSettings[originalGameName];
+      }
 
       // Update slots that use this game
       challengeData.slots.forEach(slot => {
@@ -1882,6 +2715,7 @@
       // Remove handicaps
       delete challengeData.permHandicaps[gameName];
       delete challengeData.tempHandicaps[gameName];
+      delete challengeData.gameSettings[gameName]; // Remove game settings
 
       // Clear game from any slots that use it
       challengeData.slots.forEach(slot => {
@@ -1928,15 +2762,30 @@
       showResult('Copied', 'Export seed copied to clipboard.');
     }
 
+    function downloadSeedAsTxt() {
+      const exportData = document.getElementById('exportData').value;
+      const filename = `reroll_challenge_seed_${new Date().toISOString().slice(0, 10)}.txt`;
+      const blob = new Blob([exportData], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+      showResult('Downloaded', `Seed saved as ${filename}`);
+    }
+
     function showImportModal() {
       document.getElementById('importData').value = '';
+      document.getElementById('importFile').value = ''; // Clear file input
       document.getElementById('importModal').style.display = 'flex';
     }
 
-    function importChallengeData() {
-      const seed = document.getElementById('importData').value.trim();
+    function importChallengeData(seedText = null) {
+      const seed = seedText || document.getElementById('importData').value.trim();
       if (!seed) {
-        alert('Please paste a seed to import.');
+        alert('Please paste a seed or select a file to import.');
         return;
       }
       try {
@@ -1963,6 +2812,31 @@
       }
     }
 
+    function importSeedFromFile() {
+      const fileInput = document.getElementById('importFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert('Please select a .txt file to import.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const seedContent = e.target.result;
+          importChallengeData(seedContent); // Pass content to existing import logic
+        } catch (error) {
+          console.error('Error reading file:', error);
+          alert('Error reading file. Please ensure it is a valid .txt seed file.');
+        }
+      };
+      reader.onerror = function() {
+        alert('Failed to read file.');
+      };
+      reader.readAsText(file);
+    }
+
     // Modals / UI helpers
     function showResult(title, content) {
       document.getElementById('resultTitle').textContent = title;
@@ -1972,6 +2846,29 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
+    }
+
+    let resolveMinSlotWarningPromise = null; // To hold the resolve function of the promise
+
+    function handleMinSlotWarningResponse(proceed) {
+      if (resolveMinSlotWarningPromise) {
+        resolveMinSlotWarningPromise(proceed);
+        resolveMinSlotWarningPromise = null; // Reset
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      challengeData.darkMode = document.body.classList.contains('dark-mode');
+      saveData();
+      const toggleBtn = document.querySelector('.dark-mode-toggle i');
+      if (challengeData.darkMode) {
+        toggleBtn.classList.remove('fa-moon');
+        toggleBtn.classList.add('fa-sun');
+      } else {
+        toggleBtn.classList.remove('fa-sun');
+        toggleBtn.classList.add('fa-moon');
+      }
     }
 
     function escapeHtml(str) {
@@ -2122,6 +3019,37 @@
       saveData();
     }
 
+    // Function to update max permanent handicaps from the slot view
+    function updateSlotMaxPermHandicaps(slotId, value) {
+      if (!challengeData.customMaxPermHandicapsEnabled) {
+        alert('Custom Max Permanent Handicaps is disabled. Please enable it in Settings to use this feature.');
+        // Revert the input value to the default or current saved value
+        const slot = challengeData.slots.find(s => s.id === slotId);
+        if (slot) {
+          document.getElementById(`slotMaxPermHandicaps-${slotId}`).value = challengeData.gameSettings[slot.game]?.maxPermHandicaps || 3;
+        }
+        return;
+      }
+      const slot = challengeData.slots.find(s => s.id === slotId);
+      if (!slot || !slot.game) return;
+
+      const newMax = parseInt(value);
+      if (isNaN(newMax) || newMax < 1) {
+        alert('Please enter a valid number (at least 1) for Max Permanent Handicaps.');
+        // Revert to old value if invalid
+        document.getElementById(`slotMaxPermHandicaps-${slotId}`).value = challengeData.gameSettings[slot.game]?.maxPermHandicaps || 3;
+        return;
+      }
+
+      if (!challengeData.gameSettings[slot.game]) {
+        challengeData.gameSettings[slot.game] = {};
+      }
+      challengeData.gameSettings[slot.game].maxPermHandicaps = newMax;
+      saveData();
+      showResult('Settings Updated', `Max Permanent Handicaps for ${escapeHtml(slot.game)} set to ${newMax}.`);
+      renderGames(); // Re-render to update any other UI elements that might depend on this setting
+    }
+
     // Refresh UI function
     function refreshUI() {
       renderGames();
@@ -2130,6 +3058,17 @@
       renderDatabase();
       renderSettings();
       showResult('UI Refreshed', 'All UI elements have been reloaded.');
+    }
+
+    // Notes Functions
+    function saveNotes() {
+      challengeData.challengeNotes = document.getElementById('challengeNotes').value;
+      saveData();
+      showResult('Notes Saved', 'Your challenge notes have been saved!');
+    }
+
+    function loadNotes() {
+      document.getElementById('challengeNotes').value = challengeData.challengeNotes || '';
     }
 
     document.addEventListener('DOMContentLoaded', init);
